@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide | SpinoCare</title>
+    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="profile-page" style="background-color: #F7EBEB;">
+
+    <div id="common-header"></div>
+    <script src="components.js"></script>
+
+    <div class="profile-content animate-fade-in">
+
+        <div class="guide-hero-card">
+            <i class="fa-solid fa-circle-info"></i>
+            <h3 style="color: var(--primary); margin-bottom: 5px;">Modic Changes Guide</h3>
+            <p style="color: gray; font-size: 0.9rem;">Learn about different types of Modic changes and their
+                characteristics</p>
+        </div>
+
+        <div class="guide-info-card">
+            <h4><i class="fa-solid fa-circle-info"></i> What are Modic Changes?</h4>
+            <p style="color: #333; font-size: 0.95rem; line-height: 1.5;">Modic changes are signal intensity changes in
+                the vertebral body bone marrow on MRI, located adjacent to the endplates of degenerative discs. They
+                represent different stages of degenerative disc disease and inflammatory processes.</p>
+        </div>
+
+        <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.1rem;">Types of Modic Changes</h3>
+
+        <div class="accordion-item" onclick="this.classList.toggle('active')">
+            <div class="accordion-header">
+                <div class="accordion-header-left">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: red; font-size: 1.2rem;"></i>
+                    <div>
+                        <h4 style="font-size: 1rem; margin-bottom: 2px;">Modic Type 1</h4>
+                        <p style="font-size: 0.8rem; color: gray;">Inflammatory/Edematous Changes</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down" style="color: gray;"></i>
+            </div>
+            <div class="accordion-content">
+                <strong>Characteristics:</strong>
+                <ul style="padding-left: 20px; margin-top: 8px; margin-bottom: 12px; color: #444;">
+                    <li>Hypointense on T1-weighted images</li>
+                    <li>Hyperintense on T2-weighted images</li>
+                    <li>Represents bone marrow edema and inflammation</li>
+                    <li>Often associated with acute disc degeneration</li>
+                    <li>May cause significant back pain</li>
+                </ul>
+                <strong>Clinical Significance:</strong>
+                <p style="margin-top: 4px; color: #444;">Type 1 changes are often associated with acute inflammatory
+                    processes and may correlate with clinical symptoms. They represent the most painful type of Modic
+                    changes.</p>
+            </div>
+        </div>
+
+        <div class="accordion-item" onclick="this.classList.toggle('active')">
+            <div class="accordion-header">
+                <div class="accordion-header-left">
+                    <i class="fa-solid fa-star" style="color: #FFC107; font-size: 1.2rem;"></i>
+                    <div>
+                        <h4 style="font-size: 1rem; margin-bottom: 2px;">Modic Type 2</h4>
+                        <p style="font-size: 0.8rem; color: gray;">Fatty Infiltration</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down" style="color: gray;"></i>
+            </div>
+            <div class="accordion-content">
+                <strong>Characteristics:</strong>
+                <ul style="padding-left: 20px; margin-top: 8px; margin-bottom: 12px; color: #444;">
+                    <li>Hyperintense on T1-weighted images</li>
+                    <li>Isointense or slightly hyperintense on T2-weighted images</li>
+                    <li>Represents fatty replacement of bone marrow</li>
+                    <li>Most common type of Modic changes</li>
+                    <li>Usually chronic and stable</li>
+                </ul>
+                <strong>Clinical Significance:</strong>
+                <p style="margin-top: 4px; color: #444;">Type 2 changes represent chronic degenerative processes with
+                    fatty infiltration. They are generally less painful than Type 1 changes and more stable over time.
+                </p>
+            </div>
+        </div>
+
+        <div class="accordion-item" onclick="this.classList.toggle('active')">
+            <div class="accordion-header">
+                <div class="accordion-header-left">
+                    <i class="fa-solid fa-certificate" style="color: #2ECC71; font-size: 1.2rem;"></i>
+                    <div>
+                        <h4 style="font-size: 1rem; margin-bottom: 2px;">Modic Type 3</h4>
+                        <p style="font-size: 0.8rem; color: gray;">Sclerotic Changes</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down" style="color: gray;"></i>
+            </div>
+            <div class="accordion-content">
+                <strong>Characteristics:</strong>
+                <ul style="padding-left: 20px; margin-top: 8px; margin-bottom: 12px; color: #444;">
+                    <li>Hypointense on both T1 and T2-weighted images</li>
+                    <li>Represents subchondral bone sclerosis</li>
+                    <li>Least common type of Modic changes</li>
+                    <li>Associated with advanced disc degeneration</li>
+                    <li>Indicates chronic, end-stage changes</li>
+                </ul>
+                <strong>Clinical Significance:</strong>
+                <p style="margin-top: 4px; color: #444;">Type 3 changes represent the end-stage of degenerative disc
+                    disease with extensive bone sclerosis. They are typically seen in advanced degenerative conditions.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="index.html" class="logo" style="color: white; margin-bottom: 1.5rem;">
+                        <img src="app-logo.webp" alt="SpinoCare Logo" class="app-logo"> Spino<span>Care</span>
+                    </a>
+                    <p style="color: #BDC3C7;">Empowering radiologists and patients with AI-driven spinal diagnostic
+                        tools. Built for accuracy, speed, and privacy.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="index.html#analyzer">Analysis Tool</a></li>
+                        <li><a href="#">Clinical Trials</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Access</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="#">Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 SpinoCare AI Systems. All rights reserved.
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

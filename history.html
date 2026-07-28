@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History | SpinoCare</title>
+    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .report-card {
+            background: rgb(250, 242, 242);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            margin-bottom: 18px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .report-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .report-card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #222;
+            margin: 0 0 4px 0;
+        }
+
+        .report-card-meta {
+            font-size: 0.8rem;
+            color: #888;
+            margin: 0;
+        }
+
+        .conf-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            background: rgba(130, 80, 200, 0.1);
+            color: rgba(100, 50, 180, 0.9);
+            border-radius: 10px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .download-report-btn {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #F26666;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .download-report-btn:hover {
+            background: #FFF5F5;
+        }
+
+        .download-report-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .history-empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #aaa;
+        }
+
+        .history-empty-state i {
+            font-size: 3rem;
+            color: rgba(242, 102, 102, 0.4);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .history-empty-state h3 {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body class="profile-page" style="background-color: #F2F2F7;">
+
+    <div id="common-header"></div>
+    <script src="components.js"></script>
+
+    <div class="profile-content animate-fade-in">
+        <div id="history-list"></div>
+    </div>
+
+
+
+    <script>
+        // Auth check
+        if (!localStorage.getItem('spinocare_auth_token')) {
+            window.location.href = 'login.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const list = document.getElementById('history-list');
+            const entries = JSON.parse(localStorage.getItem('spinocare_history') || '[]');
+
+            if (entries.length === 0) {
+                list.innerHTML = `
+                <div class="history-empty-state">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <h3>No Analyses Yet</h3>
+                    <p>Start by uploading T1 and T2 images in the Analyze tab.</p>
+                    <a href="index.html#analyzer" style="display:inline-block;margin-top:16px;padding:10px 24px;background:#F26666;color:white;border-radius:20px;text-decoration:none;font-weight:600;font-size:0.95rem;">
+                        Start Analysis
+                    </a>
+                </div>`;
+                return;
+            }
+
+            entries.forEach((entry, idx) => {
+                const card = document.createElement('div');
+                card.className = 'report-card';
+                card.innerHTML = `
+                <div class="report-card-header">
+                    <div>
+                        <p class="report-card-title">${entry.label}</p>
+                        <p class="report-card-meta">${entry.dateStr} &nbsp;&bull;&nbsp; Offline</p>
+                    </div>
+                    <span class="conf-badge">${entry.confidence}%</span>
+                </div>
+                <button class="download-report-btn" id="dl-btn-${idx}">
+                    <i class="fa-solid fa-square-arrow-down"></i> Download Report
+                </button>`;
+                list.appendChild(card);
+
+                document.getElementById(`dl-btn-${idx}`).addEventListener('click', async function () {
+                    this.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Generating...';
+                    this.disabled = true;
+                    await generatePDFReport(entry, entry.t1, entry.t2);
+                    this.innerHTML = '<i class="fa-solid fa-check"></i> Downloaded';
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fa-solid fa-square-arrow-down"></i> Download Report';
+                        this.disabled = false;
+                    }, 3000);
+                });
+            });
+        });
+
+        // ── PDF Generator matching iOS HistoryView createPDF ─────────────────────
+        async function generatePDFReport(result, t1Src, t2Src) {
+            const PW = 794, PH = 1123, M = 53, CW = PW - M * 2;
+            const CORAL = '#F26666', LIGHT_PINK = '#FAEBEB', ROW_ALT = '#F7F7F7';
+            const TEXT_DARK = '#222', TEXT_MUTED = '#666', DIVIDER = '#E0E0E0';
+
+            const canvas = document.createElement('canvas');
+            canvas.width = PW; canvas.height = PH;
+            const c = canvas.getContext('2d');
+            c.fillStyle = 'white'; c.fillRect(0, 0, PW, PH);
+
+            // ── Coral header ─────────────────────────────────────────────────────
+            c.fillStyle = CORAL; c.fillRect(0, 0, PW, 117);
+
+            await new Promise(function (resolve) {
+                const logoImg = new Image();
+                logoImg.onload = function () {
+                    c.save();
+                    c.beginPath();
+                    c.arc(M + 37, 58, 37, 0, Math.PI * 2);
+                    c.clip();
+                    c.drawImage(logoImg, M, 58 - 37, 74, 74);
+                    c.restore();
+                    resolve();
+                };
+                logoImg.onerror = function () {
+                    c.fillStyle = 'rgba(255,255,255,0.25)';
+                    c.beginPath(); c.arc(M + 37, 58, 37, 0, Math.PI * 2); c.fill();
+                    c.fillStyle = 'white'; c.font = 'bold 22px Inter, sans-serif';
+                    c.textAlign = 'center'; c.fillText('SC', M + 37, 65);
+                    resolve();
+                };
+                logoImg.src = 'app-logo.webp';
+            });
+
+            c.textAlign = 'left';
+            c.font = 'bold 26px Inter, sans-serif'; c.fillText('SpinoCare', M + 88, 50);
+            c.font = '13px Inter, sans-serif'; c.fillStyle = 'rgba(255,255,255,0.85)';
+            c.fillText('Medical MRI Analysis Report', M + 88, 72);
+            c.textAlign = 'right'; c.font = '12px Inter, sans-serif';
+            c.fillText('Date: ' + result.dateStr, M + CW, 72); c.textAlign = 'left';
+
+            let y = 141;
+
+            // ── ANALYSIS RESULTS sub-bar ─────────────────────────────────────────
+            c.fillStyle = LIGHT_PINK; c.fillRect(M, y, CW, 32);
+            c.fillStyle = CORAL; c.fillRect(M, y, 5, 32);
+            c.fillStyle = TEXT_DARK; c.font = 'bold 13px Inter, sans-serif';
+            c.fillText('ANALYSIS RESULTS', M + 14, y + 21); y += 44;
+
+            // ── Data Table ───────────────────────────────────────────────────────
+            const col1W = 200, rowH = 34;
+            const rows = [
+                ['Diagnosis Result', result.label],
+                ['Confidence Score', result.confidence + '%'],
+                ['No Modic Score', result.noModic + '%'],
+                ['Modic Change Score', result.confidence + '%'],
+                ['Analysis Mode', 'Offline (Local AI)'],
+                ['Processing Time', (result.time / 1000).toFixed(2) + ' sec'],
+                ['AI Model Version', 'v2.3'],
+                ['Report ID', result.entryId],
+            ];
+
+            c.strokeStyle = DIVIDER; c.lineWidth = 1;
+            roundRect(c, M, y, CW, rows.length * rowH, 6, false, true);
+
+            rows.forEach(function ([lbl, val], i) {
+                const ry = y + i * rowH;
+                c.fillStyle = i % 2 === 0 ? 'white' : ROW_ALT; c.fillRect(M, ry, CW, rowH);
+                c.strokeStyle = DIVIDER; c.lineWidth = 0.5;
+                c.beginPath(); c.moveTo(M + col1W, ry); c.lineTo(M + col1W, ry + rowH); c.stroke();
+                if (i < rows.length - 1) {
+                    c.beginPath(); c.moveTo(M, ry + rowH); c.lineTo(M + CW, ry + rowH); c.stroke();
+                }
+                c.fillStyle = TEXT_MUTED; c.font = 'bold 11px Inter, sans-serif';
+                c.fillText(lbl, M + 12, ry + 22);
+                const isRes = lbl === 'Diagnosis Result';
+                c.fillStyle = (isRes && result.isModic) ? CORAL : TEXT_DARK;
+                c.font = isRes ? 'bold 11px Inter, sans-serif' : '11px Inter, sans-serif';
+                c.fillText(val, M + col1W + 12, ry + 22);
+            });
+
+            y += rows.length * rowH + 24;
+
+            // ── MRI SCAN IMAGES section ──────────────────────────────────────────
+            c.fillStyle = LIGHT_PINK; c.fillRect(M, y, CW, 28);
+            c.fillStyle = CORAL; c.fillRect(M, y, 5, 28);
+            c.fillStyle = TEXT_DARK; c.font = 'bold 13px Inter, sans-serif';
+            c.fillText('MRI SCAN IMAGES', M + 14, y + 19); y += 34;
+
+            const gutter = 14, imgColW = (CW - gutter) / 2, imgH = 200;
+
+            async function drawImg(src, label, x, topY) {
+                c.fillStyle = 'rgba(242,102,102,0.1)';
+                roundRect(c, x, topY, imgColW, 22, 4, true, false);
+                c.fillStyle = CORAL; c.font = 'bold 11px Inter, sans-serif';
+                c.textAlign = 'center'; c.fillText(label, x + imgColW / 2, topY + 15); c.textAlign = 'left';
+                const imgY = topY + 26;
+                c.strokeStyle = DIVIDER; c.lineWidth = 1;
+                roundRect(c, x, imgY, imgColW, imgH, 4, false, true);
+                if (src && src.length > 10) {
+                    await new Promise(function (res) {
+                        const img = new Image();
+                        img.onload = function () {
+                            c.save(); roundRect(c, x, imgY, imgColW, imgH, 4, false, false); c.clip();
+                            c.drawImage(img, x, imgY, imgColW, imgH); c.restore(); res();
+                        };
+                        img.onerror = res; img.src = src;
+                    });
+                } else {
+                    c.fillStyle = TEXT_MUTED; c.font = '11px Inter, sans-serif';
+                    c.textAlign = 'center'; c.fillText('Not available', x + imgColW / 2, imgY + imgH / 2); c.textAlign = 'left';
+                }
+                c.fillStyle = TEXT_MUTED; c.font = 'italic 10px Inter, sans-serif';
+                c.textAlign = 'center'; c.fillText(label, x + imgColW / 2, imgY + imgH + 14); c.textAlign = 'left';
+            }
+
+            await drawImg(t1Src, 'T1-Weighted MRI', M, y);
+            await drawImg(t2Src, 'T2-Weighted MRI', M + imgColW + gutter, y);
+
+            // ── Footer ───────────────────────────────────────────────────────────
+            const footerY = PH - 80;
+            c.strokeStyle = DIVIDER; c.lineWidth = 0.5;
+            c.beginPath(); c.moveTo(M, footerY); c.lineTo(M + CW, footerY); c.stroke();
+            c.fillStyle = TEXT_MUTED; c.font = '9px Inter, sans-serif'; c.textAlign = 'center';
+            c.fillText('This report is generated by SpinoCare AI and is for informational purposes only.', PW / 2, footerY + 16);
+            c.fillText('It does not constitute a medical diagnosis. Please consult a qualified healthcare professional.', PW / 2, footerY + 30);
+            c.textAlign = 'right';
+            c.fillText('Page 1  |  ID: ' + result.entryId, M + CW, footerY + 50);
+
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/jpeg', 0.98);
+            link.download = 'SpinoCare_Report_' + result.entryId + '.jpg';
+            link.click();
+        }
+
+        function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y); ctx.arcTo(x + w, y, x + w, y + r, r);
+            ctx.lineTo(x + w, y + h - r); ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+            ctx.lineTo(x + r, y + h); ctx.arcTo(x, y + h, x, y + h - r, r);
+            ctx.lineTo(x, y + r); ctx.arcTo(x, y, x + r, y, r);
+            ctx.closePath();
+            if (fill) ctx.fill();
+            if (stroke) ctx.stroke();
+        }
+    </script>
+</body>
+
+</html>

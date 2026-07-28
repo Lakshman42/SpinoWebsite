@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | SpinoCare</title>
+    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .error-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: red;
+            margin-top: 4px;
+            display: none;
+            padding-left: 5px;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: gray;
+        }
+
+        /* Split-screen layout */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .signup-split-layout {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* Left image panel */
+        .signup-image-panel {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        .signup-image-panel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        .signup-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, transparent 40%, rgba(30, 10, 10, 0.85) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 3rem;
+        }
+
+        .signup-image-overlay h2 {
+            color: #fff;
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin: 0 0 0.75rem 0;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .signup-image-overlay p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.05rem;
+            margin: 0;
+            line-height: 1.6;
+            max-width: 380px;
+        }
+
+        .signup-brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2.5rem;
+        }
+
+        .signup-brand-badge img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .signup-brand-badge span {
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        /* Right form panel */
+        .signup-form-panel {
+            width: 480px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #FFEDED;
+            overflow-y: auto;
+            padding: 2rem 0;
+        }
+
+        .signup-form-panel .auth-container {
+            width: 100%;
+            min-height: unset;
+            background: transparent;
+            display: block;
+            padding: 0;
+        }
+
+        .signup-form-panel .auth-wrapper {
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 2.5rem;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 900px) {
+            .signup-image-panel {
+                display: none;
+            }
+
+            .signup-form-panel {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup-split-layout">
+
+        <!-- Left: Image Panel -->
+        <div class="signup-image-panel">
+            <img src="signup-hero.png" alt="SpinoCare MRI Analysis">
+            <div class="signup-image-overlay">
+                <div class="signup-brand-badge">
+                    <img src="app-logo.webp" alt="SpinoCare Logo">
+                    <span>SpinoCare</span>
+                </div>
+                <h2>AI-Powered Spine<br>Health Analysis</h2>
+                <p>Join thousands of patients and healthcare professionals using SpinoCare for smarter, faster MRI
+                    diagnostics.</p>
+            </div>
+        </div>
+
+        <!-- Right: Form Panel -->
+        <div class="signup-form-panel">
+            <div class="auth-container">
+                <div class="auth-wrapper animate-fade-in" style="max-width: 450px;">
+                    <div class="auth-header-text">
+                        <h1>SpinoCare</h1>
+                        <p id="role-subtitle">Join the SpinoCare community</p>
+                    </div>
+
+                    <div class="auth-card">
+                        <form id="signup-form">
+
+                            <div class="form-group">
+                                <div class="ios-input-wrapper">
+                                    <i class="fa-solid fa-user ios-input-icon"></i>
+                                    <input type="text" id="fullname" class="form-control" placeholder=" " required>
+                                    <label for="fullname" class="floating-label">Full Name</label>
+                                </div>
+                                <div class="error-label" id="err-name"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="ios-input-wrapper">
+                                    <i class="fa-solid fa-envelope ios-input-icon"></i>
+                                    <input type="email" id="email" class="form-control" placeholder=" " required>
+                                    <label for="email" class="floating-label">Email Address</label>
+                                </div>
+                                <div class="error-label" id="err-email"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="ios-input-wrapper">
+                                    <i class="fa-solid fa-phone ios-input-icon"></i>
+                                    <input type="tel" id="phone" class="form-control" placeholder=" " maxlength="10"
+                                        required>
+                                    <label for="phone" class="floating-label">Phone Number</label>
+                                </div>
+                                <div class="error-label" id="err-phone"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="ios-input-wrapper">
+                                    <i class="fa-solid fa-calendar ios-input-icon"></i>
+                                    <input type="text" id="dob" class="form-control" placeholder=" " maxlength="10"
+                                        required>
+                                    <label for="dob" class="floating-label">Date of Birth</label>
+                                </div>
+                                <div class="error-label" id="err-dob"></div>
+                            </div>
+
+                            <!-- Role Dropdown -->
+                            <div class="form-group" style="margin-bottom: 0.5rem;">
+                                <span
+                                    style="font-size: 14px; color: gray; margin-bottom: 4px; display: block;">Role</span>
+                                <div class="ios-input-wrapper" style="padding: 0;">
+                                    <i class="fa-solid fa-user-circle ios-input-icon"
+                                        style="margin-left: 1rem; color: var(--primary); font-size: 1.5rem;"></i>
+                                    <select id="role-select" class="ios-select" style="padding: 1rem 0;">
+                                        <option value="Patient">Patient</option>
+                                        <option value="Doctor">Doctor</option>
+                                        <option value="Radiologist">Radiologist</option>
+                                        <option value="Researcher">Researcher</option>
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down" style="color: gray; margin-right: 1rem;"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 1.5rem;">
+                                <div class="ios-input-wrapper">
+                                    <i class="fa-solid fa-lock ios-input-icon"></i>
+                                    <input type="password" id="password" class="form-control" placeholder=" " required>
+                                    <label for="password" class="floating-label">Password</label>
+                                    <i class="fa-solid fa-eye-slash toggle-pw" data-target="password"
+                                        style="color: gray; cursor: pointer; padding-left: 10px;"></i>
+                                </div>
+                                <div class="error-label" id="err-pw"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="ios-input-wrapper">
+                                    <i class="fa-solid fa-lock ios-input-icon"></i>
+                                    <input type="password" id="confirm-password" class="form-control" placeholder=" "
+                                        required>
+                                    <label for="confirm-password" class="floating-label">Confirm Password</label>
+                                    <i class="fa-solid fa-eye-slash toggle-pw" data-target="confirm-password"
+                                        style="color: gray; cursor: pointer; padding-left: 10px;"></i>
+                                </div>
+                                <div class="error-label" id="err-cpw"></div>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 0.5rem;">
+                                <button type="button" id="agree-btn"
+                                    style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: gray; margin-top: 2px;">
+                                    <i class="fa-regular fa-square" id="agree-icon"></i>
+                                </button>
+                                <label style="font-size: 14px; cursor: pointer;" id="agree-text">
+                                    I agree to the <a href="terms.html" id="link-terms" target="_blank"
+                                        style="color: var(--primary); text-decoration: none;">Terms &amp; Conditions</a>
+                                    and
+                                    <a href="privacy-policy.html" id="link-privacy" target="_blank"
+                                        style="color: var(--primary); text-decoration: none;">Privacy
+                                        Policy</a>
+                                </label>
+                            </div>
+                            <div class="error-label" id="err-terms" style="margin-bottom: 1.5rem;"></div>
+
+                            <div class="error-label" id="form-error"
+                                style="text-align: center; font-size: 13px; margin-bottom: 1rem;"></div>
+
+                            <button type="submit" class="btn-primary btn-auth" id="submit-btn">Create Account</button>
+
+                            <div class="auth-footer">
+                                Already have an account? <a href="login.html">Sign In</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Web OTP Verification Modal -->
+            <div class="modal-overlay" id="otp-modal" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);">
+                <div class="modal-content"
+                    style="max-width: 500px; padding: 2.5rem; border-radius: 24px; background: white; position: relative; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+
+                    <button id="close-otp"
+                        style="position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.2rem; color: #999; cursor: pointer; transition: color 0.2s;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+
+                    <!-- Icon -->
+                    <div
+                        style="width: 70px; height: 70px; background: rgba(242, 102, 102, 0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 1.5rem;">
+                        <i class="fa-solid fa-envelope-open-text" style="font-size: 2rem; color: var(--primary);"></i>
+                    </div>
+
+                    <h2 style="color: var(--text-main); font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem;">
+                        Verify Your
+                        Email</h2>
+                    <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 0.5rem;">We've sent a 6-digit
+                        verification code to</p>
+                    <p id="otp-display-email"
+                        style="color: var(--primary); font-weight: 600; font-size: 1.1rem; margin-bottom: 2rem;"></p>
+
+                    <!-- 6 Digit Boxes -->
+                    <div style="display: inline-flex; gap: 12px; justify-content: center; margin-bottom: 1.5rem;"
+                        id="otp-inputs-container">
+                        <input type="text" class="otp-box" maxlength="1">
+                        <input type="text" class="otp-box" maxlength="1">
+                        <input type="text" class="otp-box" maxlength="1">
+                        <input type="text" class="otp-box" maxlength="1">
+                        <input type="text" class="otp-box" maxlength="1">
+                        <input type="text" class="otp-box" maxlength="1">
+                    </div>
+
+                    <div class="error-label" id="err-otp"
+                        style="margin-bottom: 1.5rem; display: none; font-size: 14px;"></div>
+
+                    <!-- Verify Button -->
+                    <button class="btn-primary" id="verify-btn"
+                        style="width: 100%; border-radius: 12px; padding: 1rem; font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 700;">
+                        Verify Email
+                    </button>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 1.5rem;">
+                        <div
+                            style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.95rem;">
+                            <i class="fa-regular fa-clock"></i>
+                            <span>Expires in <strong id="otp-timer"
+                                    style="color: var(--text-main);">02:00</strong></span>
+                        </div>
+
+                        <button id="resend-btn"
+                            style="background: none; border: none; color: var(--primary); font-weight: 600; cursor: not-allowed; font-size: 0.95rem; opacity: 0.5; transition: opacity 0.2s;"
+                            disabled>
+                            Wait to resend
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                // Form Elements
+                const form = document.getElementById('signup-form');
+                const roleSelect = document.getElementById('role-select');
+                const subtitle = document.getElementById('role-subtitle');
+                const phoneInput = document.getElementById('phone');
+                const dobInput = document.getElementById('dob');
+                const pwToggles = document.querySelectorAll('.toggle-pw');
+
+                // Agreement checkbox logic
+                let agreed = false;
+                const agreeBtn = document.getElementById('agree-btn');
+                const agreeIcon = document.getElementById('agree-icon');
+                const agreeText = document.getElementById('agree-text');
+
+                function toggleAgree() {
+                    agreed = !agreed;
+                    if (agreed) {
+                        agreeIcon.className = 'fa-solid fa-square-check';
+                        agreeIcon.style.color = 'var(--primary)';
+                    } else {
+                        agreeIcon.className = 'fa-regular fa-square';
+                        agreeIcon.style.color = 'gray';
+                    }
+                }
+                agreeBtn.addEventListener('click', toggleAgree);
+                agreeText.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'A') toggleAgree();
+                });
+
+                // Role update
+                roleSelect.addEventListener('change', function (e) {
+                    const role = e.target.value;
+                    if (role === 'Patient') {
+                        subtitle.innerText = 'Join the SpinoCare community';
+                    } else {
+                        subtitle.innerText = 'Sign up as a ' + role;
+                    }
+                });
+
+                // Phone formatting (digits only)
+                phoneInput.addEventListener('input', function (e) {
+                    this.value = this.value.replace(/\D/g, '').substring(0, 10);
+                });
+
+                // DOB formatting (dd/mm/yyyy)
+                dobInput.addEventListener('input', function (e) {
+                    let val = this.value.replace(/\D/g, '');
+                    let formatted = '';
+                    for (let i = 0; i < val.length; i++) {
+                        if (i === 2 || i === 4) formatted += '/';
+                        formatted += val[i];
+                    }
+                    this.value = formatted.substring(0, 10);
+                });
+
+                // Show/Hide Password
+                pwToggles.forEach(toggle => {
+                    toggle.addEventListener('click', function () {
+                        const target = document.getElementById(this.getAttribute('data-target'));
+                        if (target.type === 'password') {
+                            target.type = 'text';
+                            this.className = 'fa-solid fa-eye toggle-pw';
+                        } else {
+                            target.type = 'password';
+                            this.className = 'fa-solid fa-eye-slash toggle-pw';
+                        }
+                    });
+                });
+
+                // Validation & Submit
+                function showError(id, message) {
+                    const el = document.getElementById(id);
+                    el.innerText = message;
+                    el.style.display = 'block';
+                }
+                function clearErrors() {
+                    document.querySelectorAll('.error-label').forEach(el => el.style.display = 'none');
+                }
+
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    clearErrors();
+                    let hasError = false;
+
+                    const name = document.getElementById('fullname').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const phone = phoneInput.value;
+                    const dob = dobInput.value;
+                    const pw = document.getElementById('password').value;
+                    const cpw = document.getElementById('confirm-password').value;
+
+                    if (!/^[A-Za-z\s]+$/.test(name)) {
+                        showError('err-name', 'Should only contain letters and spaces.');
+                        hasError = true;
+                    }
+
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                        showError('err-email', 'Please enter a valid email address.');
+                        hasError = true;
+                    }
+
+                    if (phone.length !== 10) {
+                        showError('err-phone', 'Phone number must be exactly 10 digits.');
+                        hasError = true;
+                    }
+
+                    if (dob.length !== 10) {
+                        showError('err-dob', 'Invalid Date of Birth (dd/mm/yyyy).');
+                        hasError = true;
+                    }
+
+                    if (pw.length < 8) {
+                        showError('err-pw', 'Must be at least 8 characters long.');
+                        hasError = true;
+                    }
+
+                    if (pw !== cpw) {
+                        showError('err-cpw', 'Passwords do not match.');
+                        hasError = true;
+                    }
+
+                    if (!agreed) {
+                        showError('err-terms', 'You must agree to the terms to continue.');
+                        hasError = true;
+                    }
+
+                    if (!hasError) {
+                        const btn = document.getElementById('submit-btn');
+                        const originalBtnText = btn.innerHTML;
+                        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+                        btn.disabled = true;
+
+                        const role = roleSelect.value;
+                        const requestData = {
+                            email: email,
+                            password: pw,
+                            display_name: name,
+                            phone_number: phone,
+                            dob: dob,
+                            role: role
+                        };
+
+                        fetch('http://14.139.187.229:8081/sept_batch2025/spinocare/php-api/index.php?path=/auth/register', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(requestData)
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                btn.innerHTML = originalBtnText;
+                                btn.disabled = false;
+
+                                if (data.success) {
+                                    document.getElementById('otp-display-email').innerText = email;
+                                    document.getElementById('otp-modal').style.display = 'flex';
+                                    startTimer();
+                                } else {
+                                    showError('form-error', data.error || 'Registration failed. Please try again.');
+                                }
+                            })
+                            .catch(err => {
+                                btn.innerHTML = originalBtnText;
+                                btn.disabled = false;
+                                showError('form-error', 'Network error. Please try again later.');
+                                console.error('Registration error:', err);
+                            });
+                    }
+                });
+
+                // OTP Verification Logic
+                const otpBoxes = document.querySelectorAll('.otp-box');
+                otpBoxes.forEach((box, index) => {
+                    box.addEventListener('input', function (e) {
+                        this.value = this.value.replace(/[^0-9]/g, ''); // Numbers only
+                        if (this.value && index < 5) {
+                            otpBoxes[index + 1].focus();
+                        }
+                    });
+                    box.addEventListener('keydown', function (e) {
+                        if (e.key === 'Backspace' && !this.value && index > 0) {
+                            otpBoxes[index - 1].focus();
+                        }
+                    });
+                    // Handle paste
+                    box.addEventListener('paste', function (e) {
+                        e.preventDefault();
+                        const pasteData = e.clipboardData.getData('text').replace(/[^0-9]/g, '').slice(0, 6);
+                        pasteData.split('').forEach((char, i) => {
+                            if (index + i < 6) {
+                                otpBoxes[index + i].value = char;
+                                if (index + i < 5) otpBoxes[index + i + 1].focus();
+                            }
+                        });
+                    });
+                });
+
+                let timerInterval;
+                function startTimer() {
+                    let timeLeft = 120;
+                    const resendBtn = document.getElementById('resend-btn');
+                    resendBtn.disabled = true;
+                    resendBtn.style.color = 'gray';
+                    resendBtn.innerText = 'Wait to resend';
+
+                    clearInterval(timerInterval);
+                    timerInterval = setInterval(() => {
+                        timeLeft--;
+                        const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                        const s = (timeLeft % 60).toString().padStart(2, '0');
+                        document.getElementById('otp-timer').innerText = `${m}:${s}`;
+
+                        if (timeLeft <= 0) {
+                            clearInterval(timerInterval);
+                            resendBtn.disabled = false;
+                            resendBtn.style.color = '#EB5B61';
+                            resendBtn.innerText = 'Resend Code';
+                            document.getElementById('otp-timer').innerText = '00:00';
+                        }
+                    }, 1000);
+                }
+
+                document.getElementById('close-otp').addEventListener('click', () => {
+                    document.getElementById('otp-modal').style.display = 'none';
+                });
+
+                document.getElementById('resend-btn').addEventListener('click', function () {
+                    // Simulate Resend (call register api again)
+                    document.getElementById('submit-btn').click();
+                    startTimer();
+                });
+
+                document.getElementById('verify-btn').addEventListener('click', function () {
+                    let otpInput = '';
+                    otpBoxes.forEach(b => otpInput += b.value);
+
+                    const email = document.getElementById('email').value.trim();
+                    const pw = document.getElementById('password').value;
+                    const name = document.getElementById('fullname').value.trim();
+                    const phone = phoneInput.value;
+                    const dob = dobInput.value;
+                    const role = roleSelect.value;
+
+                    if (otpInput.length !== 6) {
+                        showError('err-otp', 'Please enter the complete 6-digit code.');
+                        return;
+                    }
+
+                    const btn = document.getElementById('verify-btn');
+                    const originalBtnText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verifying...';
+                    btn.disabled = true;
+
+                    const verifyData = {
+                        email: email,
+                        otp: otpInput,
+                        password_hash: pw,
+                        display_name: name,
+                        phone_number: phone,
+                        dob: dob,
+                        role: role
+                    };
+
+                    fetch('http://14.139.187.229:8081/sept_batch2025/spinocare/php-api/index.php?path=/auth/verify-email', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(verifyData)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            btn.innerHTML = originalBtnText;
+                            btn.disabled = false;
+
+                            if (data.success && data.data && data.data.token) {
+                                localStorage.setItem('spinocare_auth_token', data.data.token);
+                                if (data.data.user) {
+                                    localStorage.setItem('spinocare_user', JSON.stringify(data.data.user));
+                                }
+                                window.location.href = 'index.html';
+                            } else {
+                                showError('err-otp', data.error || 'Invalid OTP code. Please try again.');
+                            }
+                        })
+                        .catch(err => {
+                            btn.innerHTML = originalBtnText;
+                            btn.disabled = false;
+                            showError('err-otp', 'Network error. Please try again later.');
+                            console.error('Verify error:', err);
+                        });
+                });
+            </script>
+        </div><!-- end signup-form-panel -->
+    </div><!-- end signup-split-layout -->
+</body>
+
+</html>

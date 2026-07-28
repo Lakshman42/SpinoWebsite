@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | SpinoCare</title>
+    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="profile-page">
+
+    <div id="common-header"></div>
+    <script src="components.js"></script>
+
+    <div class="profile-content animate-fade-in">
+
+        <div class="profile-card">
+            <div class="profile-avatar">
+                <i class="fa-solid fa-user" id="profile-avatar-icon"></i>
+            </div>
+            <h2 id="profile-name">—</h2>
+            <p id="profile-email">—</p>
+
+            <div class="role-badge" id="profile-role-badge"
+                style="background: linear-gradient(135deg, #f97316, #ef4444); color: #fff; border: none; box-shadow: 0 4px 15px rgba(239,68,68,0.4); font-weight: 700; letter-spacing: 0.05em; padding: 0.45rem 1.2rem; border-radius: 999px; font-size: 0.85rem;">
+                <i class="fa-solid fa-user-injured" id="profile-role-icon" style="margin-right:6px;"></i>
+                <span id="profile-role-text">Patient</span>
+            </div>
+
+            <div class="verified-badge">
+                <i class="fa-solid fa-circle-check"></i> Email Verified
+            </div>
+        </div>
+
+        <h3 class="settings-header">Account Settings</h3>
+
+        <div class="settings-list">
+            <a href="support.html" class="settings-row">
+                <div class="settings-icon-wrapper" style="background-color: rgba(255, 0, 0, 0.15); color: red;">
+                    <i class="fa-solid fa-circle-question"></i>
+                </div>
+                <div class="settings-text">
+                    <h4>Help & Support</h4>
+                    <p>Get assistance and FAQs</p>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color: gray;"></i>
+            </a>
+
+            <a href="privacy-policy.html" class="settings-row">
+                <div class="settings-icon-wrapper" style="background-color: rgba(255, 0, 0, 0.15); color: red;">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="settings-text">
+                    <h4>Privacy Policy</h4>
+                    <p>View our privacy policy</p>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color: gray;"></i>
+            </a>
+
+
+        </div>
+
+        <a href="login.html" class="logout-btn" id="logout-btn">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+        </a>
+
+    </div>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="index.html" class="logo" style="color: white; margin-bottom: 1.5rem;">
+                        <img src="app-logo.webp" alt="SpinoCare Logo" class="app-logo"> Spino<span>Care</span>
+                    </a>
+                    <p style="color: #BDC3C7;">Empowering radiologists and patients with AI-driven spinal diagnostic
+                        tools. Built for accuracy, speed, and privacy.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="index.html#analyzer">Analysis Tool</a></li>
+                        <li><a href="#">Clinical Trials</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Access</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="#">Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 SpinoCare AI Systems. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE = 'http://14.139.187.229:8081/sept_batch2025/spinocare/php-api/index.php?path=/';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            // ── 1. Auth check ─────────────────────────────────────────────────
+            const token = localStorage.getItem('spinocare_auth_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // ── 2. Show loading state ─────────────────────────────────────────
+            document.getElementById('profile-name').textContent = 'Loading...';
+            document.getElementById('profile-email').textContent = '...';
+
+            // ── 3. Fetch profile from backend ─────────────────────────────────
+            let user = {};
+            try {
+                // Get uid from cached login data to build correct endpoint
+                const cached = localStorage.getItem('spinocare_user');
+                const cachedUser = cached ? JSON.parse(cached) : {};
+                const uid = cachedUser.uid || cachedUser.firebase_uid || '';
+
+                const resp = await fetch(API_BASE + 'users/' + uid, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await resp.json();
+
+                if (data.success && data.data) {
+                    user = data.data;
+                    // Cache latest user data locally
+                    localStorage.setItem('spinocare_user', JSON.stringify(user));
+                } else if (data.error === 'Invalid or expired token') {
+                    // Token expired — force logout
+                    localStorage.removeItem('spinocare_auth_token');
+                    localStorage.removeItem('spinocare_user');
+                    window.location.href = 'login.html';
+                    return;
+                } else {
+                    // API returned but no user — fallback to cached
+                    if (cached) user = cachedUser;
+                }
+            } catch (err) {
+                // Network error — use cached data
+                console.warn('Could not fetch profile from server:', err);
+                try {
+                    const cached = localStorage.getItem('spinocare_user');
+                    if (cached) user = JSON.parse(cached);
+                } catch (e) { }
+            }
+
+            // ── 4. Populate card ──────────────────────────────────────────────
+            const name = user.display_name || user.displayName || user.name || 'SpinoCare User';
+            const email = user.email || '—';
+            const rawRole = user.role || 'patient';
+            // Capitalize first letter for display (e.g. "radiologist" → "Radiologist")
+            const role = rawRole.charAt(0).toUpperCase() + rawRole.slice(1).toLowerCase();
+
+            document.getElementById('profile-name').textContent = name;
+            document.getElementById('profile-email').textContent = email;
+            document.getElementById('profile-role-text').textContent = role;
+
+            // ── 5. Role badge styling (gradient pills) ────────────────────────
+            const badge = document.getElementById('profile-role-badge');
+            const icon = document.getElementById('profile-role-icon');
+            const roleStyles = {
+                'Doctor':      { gradient: 'linear-gradient(135deg, #06b6d4, #0e7490)', shadow: 'rgba(6,182,212,0.45)',  iconClass: 'fa-solid fa-stethoscope' },
+                'Radiologist': { gradient: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', shadow: 'rgba(139,92,246,0.45)', iconClass: 'fa-solid fa-x-ray' },
+                'Researcher':  { gradient: 'linear-gradient(135deg, #22c55e, #15803d)', shadow: 'rgba(34,197,94,0.45)',  iconClass: 'fa-solid fa-flask' },
+                'Patient':     { gradient: 'linear-gradient(135deg, #f97316, #ef4444)', shadow: 'rgba(239,68,68,0.45)',  iconClass: 'fa-solid fa-user-injured' },
+            };
+            const s = roleStyles[role] || { gradient: 'linear-gradient(135deg, #f97316, #ef4444)', shadow: 'rgba(239,68,68,0.4)', iconClass: 'fa-solid fa-user' };
+            badge.style.cssText = `
+                background: ${s.gradient};
+                color: #fff;
+                border: none;
+                box-shadow: 0 4px 18px ${s.shadow};
+                font-weight: 700;
+                letter-spacing: 0.06em;
+                padding: 0.45rem 1.3rem;
+                border-radius: 999px;
+                font-size: 0.85rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                text-transform: capitalize;
+            `;
+            icon.className = s.iconClass;
+
+            // ── 6. Logout ─────────────────────────────────────────────────────
+            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('spinocare_auth_token');
+                localStorage.removeItem('spinocare_user');
+                window.location.href = 'login.html';
+            });
+        });
+    </script>
+
+</body>
+
+</html>

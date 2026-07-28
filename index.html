@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpinoCare | Advanced Medical AI Spinal Analysis</title>
+    <meta name="description"
+        content="SpinoCare uses advanced AI to analyze T1 and T2 weighted MRI images for Modic change detection and spinal health monitoring.">
+    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="common-header"></div>
+    <script src="components.js"></script>
+
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero container">
+            <div class="hero-content animate-fade-in">
+                <h1>Next Generation <br><span style="color: var(--primary);">Spinal Health</span> Analysis</h1>
+                <p>SpinoCare leverages state-of-the-art Deep Learning models to provide rapid, accurate analysis of MRI
+                    scans. Detect Modic changes in seconds with clinical-grade precision.</p>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="signup.html" class="btn-primary">Get Started</a>
+                    <a href="login.html" class="btn-primary"
+                        style="background: white; color: var(--accent); border: 1px solid #ddd; box-shadow: none;">Log
+                        In</a>
+                </div>
+            </div>
+            <div class="hero-image animate-fade-in" style="animation-delay: 0.2s;">
+                <img src="hero-mri.webp" alt="Medical MRI Analysis Visualization" id="hero-img">
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features container" id="features">
+            <div class="section-title">
+                <h2>Clinical Precision. Simple Interface.</h2>
+                <p>Everything you need for advanced spinal diagnostics in one place.</p>
+            </div>
+            <div class="grid-features">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-microscope"></i></div>
+                    <h3>AI-Powered Analysis</h3>
+                    <p>Proprietary TFLite-optimized models trained on thousands of clinical MRI scans for maximum
+                        accuracy.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <h3>Rapid Results</h3>
+                    <p>Get results in under 500ms. Our optimized pipeline processes T1 and T2 images in parallel.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>Privacy First</h3>
+                    <p>Encrypted image handling and local-first processing ensures patient data stays confidential.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about container" id="about"
+            style="padding: 5rem 0; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 4rem;">
+            <div class="about-image animate-fade-in">
+                <img src="feature-ai.webp" alt="AI Neural Connectivity" loading="lazy"
+                    style="width: 100%; border-radius: var(--radius); transform: scale(1.1);">
+            </div>
+            <div class="about-content animate-fade-in">
+                <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem;">The Science Behind <br><span
+                        style="color: var(--primary);">SpinoCare AI</span></h2>
+                <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem;">Our proprietary neural
+                    network architecture is specifically optimized for medical imaging. By analyzing both T1 and T2
+                    weighted FLAIR sequences, SpinoCare identifies subtle signal changes in endplates that are often
+                    missed by the human eye.</p>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+                    <li style="display: flex; gap: 1rem; align-items: center;"><i class="fa-solid fa-check-circle"
+                            style="color: var(--success);"></i> Multi-sequence correlation engine</li>
+                    <li style="display: flex; gap: 1rem; align-items: center;"><i class="fa-solid fa-check-circle"
+                            style="color: var(--success);"></i> Endplate irregularity detection</li>
+                    <li style="display: flex; gap: 1rem; align-items: center;"><i class="fa-solid fa-check-circle"
+                            style="color: var(--success);"></i> Federated learning ready</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Analyzer Section (Appears only when user is logged in) -->
+        <section class="analyzer-section" id="analyzer" style="display: none;">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Advanced Medical AI</h2>
+                    <p>Upload both T1-weighted and T2-weighted FLAIR images to begin.</p>
+                </div>
+
+                <div class="analyzer-container">
+                    <div class="upload-grid">
+                        <div class="upload-box" id="upload-t1">
+                            <i class="fa-solid fa-file-arrow-up"></i>
+                            <strong>Upload T1-weighted</strong>
+                            <p>Drag & drop or click to browse</p>
+                            <input type="file" id="input-t1" hidden accept="image/*">
+                            <img id="preview-t1" class="preview-img">
+                        </div>
+
+                        <div class="upload-box" id="upload-t2">
+                            <i class="fa-solid fa-file-arrow-up"></i>
+                            <strong>Upload T2-weighted</strong>
+                            <p>Drag & drop or click to browse</p>
+                            <input type="file" id="input-t2" hidden accept="image/*">
+                            <img id="preview-t2" class="preview-img">
+                        </div>
+                    </div>
+
+                    <div class="analyze-btn-container">
+                        <button class="btn-primary analyze-btn" id="analyze-trigger" disabled>
+                            <i class="fa-solid fa-magnifying-glass"></i> Analyze Images
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- Results Modal — matches iOS ResultSheet exactly -->
+    <div class="results-overlay" id="results-modal">
+        <div id="results-card-ios">
+
+            <!-- Title -->
+            <h2 id="result-title"
+                style="color:#F26666; font-size:1.5rem; font-weight:700; text-align:center; padding-top:10px; margin:0 0 18px 0;">
+                Analysis Results
+            </h2>
+
+            <!-- Row items -->
+            <div style="display:flex; flex-direction:column; gap:14px; padding: 0 20px;">
+
+                <!-- Prediction Mode -->
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="font-size:1.2rem;">📱</span>
+                    <span style="font-size:1rem; font-weight:500; color:rgba(0,0,0,0.8);">Prediction Mode</span>
+                </div>
+
+                <!-- Result Label -->
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="font-size:1.2rem;">🔍</span>
+                    <span id="result-label-ios" style="font-size:1rem; font-weight:700; color:#F26666;">—</span>
+                </div>
+
+                <!-- Confidence -->
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="font-size:1.2rem;">📊</span>
+                    <span id="result-confidence-ios"
+                        style="font-size:1rem; font-weight:500; color:rgba(0,0,0,0.8);">Confidence: —</span>
+                </div>
+
+                <!-- Detailed Scores Card -->
+                <div
+                    style="background:rgba(255,255,255,0.6); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:10px;">
+                    <span style="font-size:0.875rem; font-weight:600; color:rgba(0,0,0,0.5);">Detailed Scores:</span>
+
+                    <div
+                        style="display:flex; justify-content:space-between; color:rgba(0,0,0,0.7); font-size:0.875rem;">
+                        <span>No Modic:</span>
+                        <strong id="score-no-modic">—</strong>
+                    </div>
+                    <div
+                        style="display:flex; justify-content:space-between; color:rgba(0,0,0,0.7); font-size:0.875rem;">
+                        <span>Modic Change:</span>
+                        <strong id="score-modic">—</strong>
+                    </div>
+                </div>
+
+                <!-- Version & Time footer row -->
+                <div
+                    style="display:flex; justify-content:space-between; color:gray; font-size:0.75rem; padding-top:4px;">
+                    <span id="res-model-version">v2.3</span>
+                    <span id="res-time">Time: —</span>
+                </div>
+            </div>
+
+            <!-- Buttons — Dismiss + Save to History -->
+            <div style="display:flex; gap:15px; padding:20px 20px 20px 20px;">
+                <button id="close-modal"
+                    style="flex:1; padding:12px; background:rgba(128,128,128,0.1); border:none; border-radius:12px; font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:700; color:gray; cursor:pointer; transition:0.2s;">
+                    Dismiss
+                </button>
+                <button id="save-history-btn"
+                    style="flex:1; padding:12px; background:#F26666; border:none; border-radius:12px; font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:700; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:0.2s;">
+                    <i class="fa-solid fa-arrow-down-to-line"></i> Save to History
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        .results-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 5000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #results-card-ios {
+            width: min(340px, 92vw);
+            background: #FAF0F5;
+            /* iOS lightPinkBg: rgb(0.98, 0.94, 0.96) */
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            padding-top: 0;
+            font-family: 'Inter', sans-serif;
+            animation: cardPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes cardPop {
+            from {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        #save-history-btn:hover {
+            opacity: 0.85;
+        }
+
+        #close-modal:hover {
+            background: rgba(128, 128, 128, 0.18);
+        }
+    </style>
+
+
+
+
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="#" class="logo" style="color: white; margin-bottom: 1.5rem;">
+                        <img src="app-logo.webp" alt="SpinoCare Logo" class="app-logo"> SpinoCare<span>Care</span>
+                    </a>
+                    <p style="color: #BDC3C7;">Empowering radiologists and patients with AI-driven spinal diagnostic
+                        tools. Built for accuracy, speed, and privacy.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#">Analysis Tool</a></li>
+                        <li><a href="#">Clinical Trials</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Access</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="#">Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 SpinoCare AI Systems. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="image-editor.js"></script>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var isLoggedIn = !!localStorage.getItem('spinocare_auth_token');
+            var analyzerSection = document.getElementById('analyzer');
+
+            if (isLoggedIn) {
+                // User logged in -> show analysis feature
+                if (analyzerSection) analyzerSection.style.display = 'block';
+
+                var heroButtonsContainer = document.querySelector('.hero-content div[style*="display: flex"]');
+                if (heroButtonsContainer) {
+                    heroButtonsContainer.innerHTML = '<a href="#analyzer" class="btn-primary">Analyze Now</a>';
+                    var analyzeLink = heroButtonsContainer.querySelector('a[href^="#"]');
+                    if (analyzeLink) {
+                        analyzeLink.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                        });
+                    }
+                }
+            } else {
+                // User not logged in -> hide analysis feature
+                if (analyzerSection) analyzerSection.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>

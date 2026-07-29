@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let t2File = null;
     let t1IsColor = false;
     let t2IsColor = false;
+    let t1IsInvalid = false;
+    let t2IsInvalid = false;
+    let t1InvalidReason = '';
+    let t2InvalidReason = '';
 
     // Setup Upload Box with Click & Drag-and-Drop support
     function setupUploadBox(boxEl, inputEl, type) {
@@ -38,23 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }, false);
         });
 
-        ['dragenter', 'dragover'].forEach(eventName => {
-            boxEl.addEventListener('dragover', () => {
-                boxEl.classList.add('drag-over');
-            }, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            boxEl.addEventListener('dragleave', () => {
-                boxEl.classList.remove('drag-over');
-            }, false);
-        });
-
+        boxEl.addEventListener('dragover', () => boxEl.classList.add('dragover'));
+        boxEl.addEventListener('dragleave', () => boxEl.classList.remove('dragover'));
         boxEl.addEventListener('drop', (e) => {
-            const dt = e.dataTransfer;
-            const files = dt && dt.files;
-            if (files && files.length > 0) {
-                handleFile(files[0], type);
+            boxEl.classList.remove('dragover');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                handleFile(e.dataTransfer.files[0], type);
             }
         });
     }
@@ -71,29 +64,37 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (type === 't1') t1IsColor = false;
-        if (type === 't2') t2IsColor = false;
+        if (type === 't1') { t1IsColor = false; t1IsInvalid = false; t1InvalidReason = ''; }
+        if (type === 't2') { t2IsColor = false; t2IsInvalid = false; t2InvalidReason = ''; }
 
         // Instantly display preview
         const url = URL.createObjectURL(file);
         setFilePreview(type, file, url);
 
-        // Check if image is color in background
-        checkColorImage(file, (isColor) => {
-            if (type === 't1') t1IsColor = isColor;
-            if (type === 't2') t2IsColor = isColor;
+        // Run Medical MRI Scan Integrity Validation
+        checkInvalidMRIImage(file, (res) => {
+            if (type === 't1') {
+                t1IsInvalid = res.invalid;
+                t1InvalidReason = res.reason || '';
+                if (res.isColor) t1IsColor = true;
+            }
+            if (type === 't2') {
+                t2IsInvalid = res.invalid;
+                t2InvalidReason = res.reason || '';
+                if (res.isColor) t2IsColor = true;
+            }
 
-            if (isColor) {
+            if (res.invalid) {
                 showValidationError(
-                    'Warning: Color Image Detected',
-                    'Medical MRI scans are expected to be grayscale (monochrome). Color images cannot be analyzed by the AI model.',
+                    'Analysis Blocked: Non-MRI Image Detected',
+                    `The uploaded ${type.toUpperCase()} image is invalid (${res.reason}). SpinoCare AI requires valid grayscale T1 & T2 sagittal MRI scans.`,
                     'warning'
                 );
             }
         });
     }
 
-    function checkColorImage(file, callback) {
+    function checkInvalidMRIImage(file, callback) {
         const reader = new FileReader();
         reader.onload = (e) => {
             const img = new Image();
@@ -108,36 +109,61 @@ document.addEventListener('DOMContentLoaded', () => {
                     ctx.drawImage(img, 0, 0, sampleW, sampleH);
 
                     const imgData = ctx.getImageData(0, 0, sampleW, sampleH).data;
+                    let totalLum = 0;
+                    let minLum = 255, maxLum = 0;
                     let colorPixels = 0;
                     let totalSampled = 0;
 
-                    for (let i = 0; i < imgData.length; i += 16) { // Sample every 4th pixel
+                    for (let i = 0; i < imgData.length; i += 16) {
                         const r = imgData[i];
                         const g = imgData[i + 1];
                         const b = imgData[i + 2];
                         const a = imgData[i + 3];
+                        if (a < 30) continue;
 
-                        if (a < 50) continue; // Skip transparent background
-                        totalSampled++;
+                        const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+                        totalLum += lum;
+                        if (lum < minLum) minLum = lum;
+                        if (lum > maxLum) maxLum = lum;
 
-                        // Calculate RGB divergence
                         const diff = Math.abs(r - g) + Math.abs(g - b) + Math.abs(r - b);
-                        if (diff > 35) { // Threshold for non-monochrome color pixels
-                            colorPixels++;
-                        }
+                        if (diff > 25) colorPixels++;
+                        totalSampled++;
                     }
 
-                    const isColor = totalSampled > 0 && (colorPixels / totalSampled) > 0.03;
-                    callback(isColor);
+                    if (totalSampled === 0) {
+                        callback({ invalid: true, isColor: false, reason: 'Blank / Transparent Image' });
+                        return;
+                    }
+
+                    const avgLum = totalLum / totalSampled;
+                    let varSum = 0;
+                    for (let i = 0; i < imgData.length; i += 16) {
+                        const a = imgData[i + 3];
+                        if (a < 30) continue;
+                        const lum = 0.299 * imgData[i] + 0.587 * imgData[i + 1] + 0.114 * imgData[i + 2];
+                        varSum += (lum - avgLum) ** 2;
+                    }
+                    const stdDev = Math.sqrt(varSum / totalSampled);
+                    const isColor = (colorPixels / totalSampled) > 0.03;
+
+                    if (isColor) {
+                        callback({ invalid: true, isColor: true, reason: 'Color Image (Non-Grayscale RGB Photo)' });
+                    } else if (stdDev < 4.0) {
+                        callback({ invalid: true, isColor: false, reason: 'Solid Color / Full Black or White Image' });
+                    } else if ((maxLum - minLum) < 18.0) {
+                        callback({ invalid: true, isColor: false, reason: 'Flat Image (Low Structural MRI Contrast)' });
+                    } else {
+                        callback({ invalid: false, isColor: false });
+                    }
                 } catch (err) {
-                    console.warn('Color analysis error:', err);
-                    callback(false);
+                    callback({ invalid: false, isColor: false });
                 }
             };
-            img.onerror = () => callback(false);
+            img.onerror = () => callback({ invalid: false, isColor: false });
             img.src = e.target.result;
         };
-        reader.onerror = () => callback(false);
+        reader.onerror = () => callback({ invalid: false, isColor: false });
         reader.readAsDataURL(file);
     }
 
@@ -320,11 +346,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return; // BLOCK EXECUTION
         }
 
-        // 3. Check if color images were uploaded
-        if (t1IsColor || t2IsColor) {
+        // 3. Check if non-MRI image (color photo, solid black/white, flat non-MRI) was uploaded
+        if (t1IsInvalid || t2IsInvalid || t1IsColor || t2IsColor) {
+            const reason = t1InvalidReason || t2InvalidReason || 'Color or Non-MRI Image';
             showValidationError(
-                'Analysis Blocked: Color Image Detected',
-                'Analysis cannot be performed on color images. Medical MRI scans must be grayscale (monochrome). Please upload valid monochrome MRI scans.',
+                'Analysis Blocked: Non-MRI Image Uploaded',
+                `Analysis cannot be performed. The uploaded image is invalid (${reason}). SpinoCare AI requires valid grayscale T1 and T2 sagittal MRI scans.`,
                 'warning'
             );
             return; // BLOCK EXECUTION

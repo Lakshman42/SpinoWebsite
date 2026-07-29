@@ -5,113 +5,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guide | SpinoCare</title>
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=9">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
-<body class="profile-page" style="background-color: #F7EBEB;">
+<body class="guide-page">
 
     <div id="common-header"></div>
-    <script src="components.js"></script>
+    <script src="components.js?v=5"></script>
 
-    <div class="profile-content animate-fade-in">
+    <div class="guide-content animate-fade-in" style="max-width: 760px; margin: 6rem auto 4rem auto; padding: 0 1.5rem;">
 
-        <div class="guide-hero-card">
-            <i class="fa-solid fa-circle-info"></i>
-            <h3 style="color: var(--primary); margin-bottom: 5px;">Modic Changes Guide</h3>
-            <p style="color: gray; font-size: 0.9rem;">Learn about different types of Modic changes and their
-                characteristics</p>
+        <!-- Hero Card -->
+        <div class="guide-hero-card" style="text-align: center; padding: 2.5rem 2rem; border-radius: 24px; margin-bottom: 2rem; background: var(--bg-card); border: 1px solid var(--border-color); box-shadow: var(--shadow);">
+            <i class="fa-solid fa-book-medical" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.75rem;"></i>
+            <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">Modic Changes Medical Guide</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 520px; margin: 0 auto;">
+                A comprehensive clinical reference for understanding vertebral endplate signal variations across MRI T1 & T2 weighted sequences.
+            </p>
         </div>
 
-        <div class="guide-info-card">
-            <h4><i class="fa-solid fa-circle-info"></i> What are Modic Changes?</h4>
-            <p style="color: #333; font-size: 0.95rem; line-height: 1.5;">Modic changes are signal intensity changes in
-                the vertebral body bone marrow on MRI, located adjacent to the endplates of degenerative discs. They
-                represent different stages of degenerative disc disease and inflammatory processes.</p>
+        <!-- Overview Info Card -->
+        <div class="guide-info-card" style="background: rgba(242, 102, 102, 0.08); border: 1px solid rgba(242, 102, 102, 0.2); border-radius: 20px; padding: 1.5rem 1.75rem; margin-bottom: 2.5rem;">
+            <h4 style="color: var(--primary); font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem;">
+                <i class="fa-solid fa-circle-info"></i> What are Modic Changes?
+            </h4>
+            <p style="color: var(--text-main); font-size: 0.95rem; line-height: 1.7; margin: 0;">
+                Modic changes are pathognomonic signal intensity alterations within vertebral bone marrow adjacent to degenerated intervertebral disc endplates. First classified by Dr. Michael Modic in 1988, they reflect distinct histopathological stages of degenerative spinal disease and inflammatory responses.
+            </p>
         </div>
 
-        <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.1rem;">Types of Modic Changes</h3>
+        <h3 style="color: var(--text-main); margin-bottom: 1.25rem; font-size: 1.25rem; font-weight: 800; padding-left: 0.25rem;">
+            Classification of Modic Changes
+        </h3>
 
-        <div class="accordion-item" onclick="this.classList.toggle('active')">
-            <div class="accordion-header">
-                <div class="accordion-header-left">
-                    <i class="fa-solid fa-triangle-exclamation" style="color: red; font-size: 1.2rem;"></i>
+        <!-- Type 1 Accordion -->
+        <div class="accordion-item" onclick="this.classList.toggle('active')" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 18px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; box-shadow: var(--shadow); cursor: pointer; transition: var(--transition);">
+            <div class="accordion-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="accordion-header-left" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(242, 102, 102, 0.15); color: #F26666; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+                        <i class="fa-solid fa-fire"></i>
+                    </div>
                     <div>
-                        <h4 style="font-size: 1rem; margin-bottom: 2px;">Modic Type 1</h4>
-                        <p style="font-size: 0.8rem; color: gray;">Inflammatory/Edematous Changes</p>
+                        <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-main); margin-bottom: 2px;">Modic Type 1</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Bone Marrow Edema & Inflammation</p>
                     </div>
                 </div>
-                <i class="fa-solid fa-chevron-down" style="color: gray;"></i>
+                <i class="fa-solid fa-chevron-down" style="color: var(--text-muted); font-size: 0.9rem; transition: transform 0.3s ease;"></i>
             </div>
-            <div class="accordion-content">
-                <strong>Characteristics:</strong>
-                <ul style="padding-left: 20px; margin-top: 8px; margin-bottom: 12px; color: #444;">
-                    <li>Hypointense on T1-weighted images</li>
-                    <li>Hyperintense on T2-weighted images</li>
-                    <li>Represents bone marrow edema and inflammation</li>
-                    <li>Often associated with acute disc degeneration</li>
-                    <li>May cause significant back pain</li>
+            <div class="accordion-content" style="line-height: 1.7;">
+                <strong style="color: var(--primary); font-size: 0.95rem;">MRI Signal Profile:</strong>
+                <ul style="padding-left: 1.2rem; margin: 0.5rem 0 1rem 0; color: var(--text-main); font-size: 0.9rem;">
+                    <li><strong>T1 Weighted:</strong> Low signal intensity (Hypointense / Dark)</li>
+                    <li><strong>T2 Weighted:</strong> High signal intensity (Hyperintense / Bright)</li>
+                    <li><strong>Histology:</strong> Represents bone marrow vascularization, edema, and active disruption.</li>
+                    <li><strong>Clinical Correlation:</strong> Strongly associated with acute axial low back pain.</li>
                 </ul>
-                <strong>Clinical Significance:</strong>
-                <p style="margin-top: 4px; color: #444;">Type 1 changes are often associated with acute inflammatory
-                    processes and may correlate with clinical symptoms. They represent the most painful type of Modic
-                    changes.</p>
-            </div>
-        </div>
-
-        <div class="accordion-item" onclick="this.classList.toggle('active')">
-            <div class="accordion-header">
-                <div class="accordion-header-left">
-                    <i class="fa-solid fa-star" style="color: #FFC107; font-size: 1.2rem;"></i>
-                    <div>
-                        <h4 style="font-size: 1rem; margin-bottom: 2px;">Modic Type 2</h4>
-                        <p style="font-size: 0.8rem; color: gray;">Fatty Infiltration</p>
-                    </div>
-                </div>
-                <i class="fa-solid fa-chevron-down" style="color: gray;"></i>
-            </div>
-            <div class="accordion-content">
-                <strong>Characteristics:</strong>
-                <ul style="padding-left: 20px; margin-top: 8px; margin-bottom: 12px; color: #444;">
-                    <li>Hyperintense on T1-weighted images</li>
-                    <li>Isointense or slightly hyperintense on T2-weighted images</li>
-                    <li>Represents fatty replacement of bone marrow</li>
-                    <li>Most common type of Modic changes</li>
-                    <li>Usually chronic and stable</li>
-                </ul>
-                <strong>Clinical Significance:</strong>
-                <p style="margin-top: 4px; color: #444;">Type 2 changes represent chronic degenerative processes with
-                    fatty infiltration. They are generally less painful than Type 1 changes and more stable over time.
+                <strong style="color: var(--text-main); font-size: 0.95rem;">Clinical Management:</strong>
+                <p style="margin-top: 0.4rem; color: var(--text-muted); font-size: 0.9rem;">
+                    Type 1 lesions represent an active, inflammatory biomechanical phase. Conservative management with anti-inflammatory therapy and targeted spinal rehabilitation is typically indicated.
                 </p>
             </div>
         </div>
 
-        <div class="accordion-item" onclick="this.classList.toggle('active')">
-            <div class="accordion-header">
-                <div class="accordion-header-left">
-                    <i class="fa-solid fa-certificate" style="color: #2ECC71; font-size: 1.2rem;"></i>
+        <!-- Type 2 Accordion -->
+        <div class="accordion-item" onclick="this.classList.toggle('active')" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 18px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; box-shadow: var(--shadow); cursor: pointer; transition: var(--transition);">
+            <div class="accordion-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="accordion-header-left" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(245, 158, 11, 0.15); color: #F59E0B; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+                        <i class="fa-solid fa-droplet"></i>
+                    </div>
                     <div>
-                        <h4 style="font-size: 1rem; margin-bottom: 2px;">Modic Type 3</h4>
-                        <p style="font-size: 0.8rem; color: gray;">Sclerotic Changes</p>
+                        <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-main); margin-bottom: 2px;">Modic Type 2</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Fatty Marrow Replacement</p>
                     </div>
                 </div>
-                <i class="fa-solid fa-chevron-down" style="color: gray;"></i>
+                <i class="fa-solid fa-chevron-down" style="color: var(--text-muted); font-size: 0.9rem; transition: transform 0.3s ease;"></i>
             </div>
-            <div class="accordion-content">
-                <strong>Characteristics:</strong>
-                <ul style="padding-left: 20px; margin-top: 8px; margin-bottom: 12px; color: #444;">
-                    <li>Hypointense on both T1 and T2-weighted images</li>
-                    <li>Represents subchondral bone sclerosis</li>
-                    <li>Least common type of Modic changes</li>
-                    <li>Associated with advanced disc degeneration</li>
-                    <li>Indicates chronic, end-stage changes</li>
+            <div class="accordion-content" style="line-height: 1.7;">
+                <strong style="color: #F59E0B; font-size: 0.95rem;">MRI Signal Profile:</strong>
+                <ul style="padding-left: 1.2rem; margin: 0.5rem 0 1rem 0; color: var(--text-main); font-size: 0.9rem;">
+                    <li><strong>T1 Weighted:</strong> High signal intensity (Hyperintense / Bright)</li>
+                    <li><strong>T2 Weighted:</strong> Isointense or slightly hyperintense (Bright/Yellowish)</li>
+                    <li><strong>Histology:</strong> Conversion of red hematopoietic marrow into yellow fatty marrow.</li>
+                    <li><strong>Prevalence:</strong> Most common type encountered in routine clinical MRI practice.</li>
                 </ul>
-                <strong>Clinical Significance:</strong>
-                <p style="margin-top: 4px; color: #444;">Type 3 changes represent the end-stage of degenerative disc
-                    disease with extensive bone sclerosis. They are typically seen in advanced degenerative conditions.
+                <strong style="color: var(--text-main); font-size: 0.95rem;">Clinical Management:</strong>
+                <p style="margin-top: 0.4rem; color: var(--text-muted); font-size: 0.9rem;">
+                    Type 2 changes signify a chronic, stable degenerative conversion. Patients generally present with milder symptoms compared to acute Type 1 inflammatory episodes.
+                </p>
+            </div>
+        </div>
+
+        <!-- Type 3 Accordion -->
+        <div class="accordion-item" onclick="this.classList.toggle('active')" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 18px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; box-shadow: var(--shadow); cursor: pointer; transition: var(--transition);">
+            <div class="accordion-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="accordion-header-left" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16, 185, 129, 0.15); color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+                        <i class="fa-solid fa-bone"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-main); margin-bottom: 2px;">Modic Type 3</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Subchondral Bone Sclerosis</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-down" style="color: var(--text-muted); font-size: 0.9rem; transition: transform 0.3s ease;"></i>
+            </div>
+            <div class="accordion-content" style="line-height: 1.7;">
+                <strong style="color: #10B981; font-size: 0.95rem;">MRI Signal Profile:</strong>
+                <ul style="padding-left: 1.2rem; margin: 0.5rem 0 1rem 0; color: var(--text-main); font-size: 0.9rem;">
+                    <li><strong>T1 Weighted:</strong> Low signal intensity (Hypointense / Dark)</li>
+                    <li><strong>T2 Weighted:</strong> Low signal intensity (Hypointense / Dark)</li>
+                    <li><strong>Histology:</strong> Dense subchondral osteosclerosis without residual marrow space.</li>
+                    <li><strong>Stage:</strong> Represents chronic, end-stage degenerative stabilization.</li>
+                </ul>
+                <strong style="color: var(--text-main); font-size: 0.95rem;">Clinical Management:</strong>
+                <p style="margin-top: 0.4rem; color: var(--text-muted); font-size: 0.9rem;">
+                    Type 3 changes represent quiescent, sclerotic bone remodeling following long-standing disc degeneration.
                 </p>
             </div>
         </div>

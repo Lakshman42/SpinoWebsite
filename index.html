@@ -7,17 +7,17 @@
     <title>SpinoCare | Advanced Medical AI Spinal Analysis</title>
     <meta name="description"
         content="SpinoCare uses advanced AI to analyze T1 and T2 weighted MRI images for Modic change detection and spinal health monitoring.">
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
     <div id="common-header"></div>
-    <script src="components.js"></script>
+    <script src="components.js?v=5"></script>
 
 
     <main>
@@ -104,7 +104,7 @@
                             <i class="fa-solid fa-file-arrow-up"></i>
                             <strong>Upload T1-weighted</strong>
                             <p>Drag & drop or click to browse</p>
-                            <input type="file" id="input-t1" hidden accept="image/*">
+                            <input type="file" id="input-t1" accept="image/*" style="position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none;">
                             <img id="preview-t1" class="preview-img">
                         </div>
 
@@ -112,7 +112,7 @@
                             <i class="fa-solid fa-file-arrow-up"></i>
                             <strong>Upload T2-weighted</strong>
                             <p>Drag & drop or click to browse</p>
-                            <input type="file" id="input-t2" hidden accept="image/*">
+                            <input type="file" id="input-t2" accept="image/*" style="position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none;">
                             <img id="preview-t2" class="preview-img">
                         </div>
                     </div>
@@ -121,6 +121,23 @@
                         <button class="btn-primary analyze-btn" id="analyze-trigger" disabled>
                             <i class="fa-solid fa-magnifying-glass"></i> Analyze Images
                         </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guest Auth Lock Card (shown if unauthenticated) -->
+        <section class="analyzer-section" id="guest-analyzer-lock" style="display: none;">
+            <div class="container">
+                <div class="analyzer-container" style="text-align: center; padding: 3rem 2rem; border: 1px dashed var(--border-color); background: var(--bg-light); border-radius: 20px;">
+                    <i class="fa-solid fa-shield-halved" style="font-size: 2.5rem; color: var(--accent-indigo); margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">Authentication Required</h3>
+                    <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto 1.5rem auto; font-size: 0.95rem;">
+                        Medical AI Analysis is restricted to registered users to prevent unauthorized access. Please log in or sign up below to unlock the analyzer.
+                    </p>
+                    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                        <a href="login.html" class="btn-primary"><i class="fa-solid fa-right-to-bracket"></i> Log In to Account</a>
+                        <a href="signup.html" class="btn-secondary"><i class="fa-solid fa-user-plus"></i> Create Account</a>
                     </div>
                 </div>
             </div>
@@ -283,31 +300,42 @@
     </footer>
 
     <script src="image-editor.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=10"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var isLoggedIn = !!localStorage.getItem('spinocare_auth_token');
             var analyzerSection = document.getElementById('analyzer');
+            var guestLockSection = document.getElementById('guest-analyzer-lock');
+            var heroButtonsContainer = document.querySelector('.hero-content div[style*="display: flex"]');
 
-            if (isLoggedIn) {
-                // User logged in -> show analysis feature
-                if (analyzerSection) analyzerSection.style.display = 'block';
+            function applyAuthUI() {
+                var isLoggedIn = !!localStorage.getItem('spinocare_auth_token');
+                if (isLoggedIn) {
+                    // User logged in -> grant access to medical AI analyzer
+                    if (analyzerSection) analyzerSection.style.display = 'block';
+                    if (guestLockSection) guestLockSection.style.display = 'none';
 
-                var heroButtonsContainer = document.querySelector('.hero-content div[style*="display: flex"]');
-                if (heroButtonsContainer) {
-                    heroButtonsContainer.innerHTML = '<a href="#analyzer" class="btn-primary">Analyze Now</a>';
-                    var analyzeLink = heroButtonsContainer.querySelector('a[href^="#"]');
-                    if (analyzeLink) {
-                        analyzeLink.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-                        });
+                    if (heroButtonsContainer) {
+                        heroButtonsContainer.innerHTML = '<a href="#analyzer" class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Analyze Now</a>';
+                        var analyzeLink = heroButtonsContainer.querySelector('a[href^="#"]');
+                        if (analyzeLink) {
+                            analyzeLink.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                            });
+                        }
+                    }
+                } else {
+                    // Unknown / Guest user -> Block access to analyzer and show guest lock card
+                    if (analyzerSection) analyzerSection.style.display = 'none';
+                    if (guestLockSection) guestLockSection.style.display = 'block';
+
+                    if (heroButtonsContainer) {
+                        heroButtonsContainer.innerHTML = '<a href="login.html" class="btn-primary"><i class="fa-solid fa-right-to-bracket"></i> Log In to Analyze</a> <a href="signup.html" class="btn-secondary" style="margin-left: 0.75rem;">Sign Up</a>';
                     }
                 }
-            } else {
-                // User not logged in -> hide analysis feature
-                if (analyzerSection) analyzerSection.style.display = 'none';
             }
+
+            applyAuthUI();
         });
     </script>
 </body>

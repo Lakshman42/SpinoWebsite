@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | SpinoCare</title>
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=9">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,59 +15,78 @@
 <body class="profile-page">
 
     <div id="common-header"></div>
-    <script src="components.js"></script>
+    <script src="components.js?v=5"></script>
 
-    <div class="profile-content animate-fade-in">
+    <div class="profile-content animate-fade-in" style="max-width: 680px; margin: 6rem auto 3rem auto; padding: 0 1.5rem;">
 
-        <div class="profile-card">
-            <div class="profile-avatar">
+        <div class="profile-card" style="text-align: center; padding: 2.5rem 2rem; border-radius: 24px; margin-bottom: 2.5rem; background: var(--bg-card); border: 1px solid var(--border-color); box-shadow: var(--shadow);">
+            <div class="profile-avatar" style="width: 80px; height: 80px; border-radius: 50%; background: rgba(242, 102, 102, 0.15); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 1.25rem auto;">
                 <i class="fa-solid fa-user" id="profile-avatar-icon"></i>
             </div>
-            <h2 id="profile-name">—</h2>
-            <p id="profile-email">—</p>
+            <h2 id="profile-name" style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.25rem;">—</h2>
+            <p id="profile-email" style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.25rem;">—</p>
 
-            <div class="role-badge" id="profile-role-badge"
-                style="background: linear-gradient(135deg, #f97316, #ef4444); color: #fff; border: none; box-shadow: 0 4px 15px rgba(239,68,68,0.4); font-weight: 700; letter-spacing: 0.05em; padding: 0.45rem 1.2rem; border-radius: 999px; font-size: 0.85rem;">
-                <i class="fa-solid fa-user-injured" id="profile-role-icon" style="margin-right:6px;"></i>
-                <span id="profile-role-text">Patient</span>
-            </div>
+            <div style="display: flex; gap: 0.75rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+                <div class="role-badge" id="profile-role-badge"
+                    style="background: linear-gradient(135deg, #f97316, #ef4444); color: #fff; border: none; box-shadow: 0 4px 15px rgba(239,68,68,0.3); font-weight: 700; letter-spacing: 0.04em; padding: 0.45rem 1.25rem; border-radius: 999px; font-size: 0.85rem; display: inline-flex; align-items: center;">
+                    <i class="fa-solid fa-user-injured" id="profile-role-icon" style="margin-right:6px;"></i>
+                    <span id="profile-role-text">Patient</span>
+                </div>
 
-            <div class="verified-badge">
-                <i class="fa-solid fa-circle-check"></i> Email Verified
+                <div class="verified-badge" style="background: rgba(16, 185, 129, 0.12); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.25); font-weight: 700; padding: 0.45rem 1.1rem; border-radius: 999px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-circle-check"></i> Email Verified
+                </div>
             </div>
         </div>
 
-        <h3 class="settings-header">Account Settings</h3>
+        <h3 class="settings-header" style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 1.25rem; padding-left: 0.25rem;">Account Settings</h3>
 
-        <div class="settings-list">
-            <a href="support.html" class="settings-row">
-                <div class="settings-icon-wrapper" style="background-color: rgba(255, 0, 0, 0.15); color: red;">
+        <div class="settings-list" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+            <!-- Appearance Theme Setting Row -->
+            <div class="settings-row" id="profile-theme-row" style="cursor: pointer; padding: 1.1rem 1.25rem; border-radius: 18px; background: var(--bg-card); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem; transition: var(--transition);">
+                <div class="settings-icon-wrapper" style="width: 44px; height: 44px; border-radius: 12px; background-color: rgba(99, 102, 241, 0.15); color: #6366F1; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+                    <i class="fa-solid fa-moon" id="profile-theme-icon"></i>
+                </div>
+                <div class="settings-text" style="flex: 1;">
+                    <h4 style="font-size: 0.98rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px;">Appearance Theme</h4>
+                    <p id="profile-theme-desc" style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Toggle Dark or Light interface</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <span id="profile-theme-label" style="font-size: 0.85rem; font-weight: 700; color: var(--primary);">Dark Mode</span>
+                    <button type="button" class="theme-toggle-btn" id="profile-theme-btn" title="Toggle Theme" style="cursor: pointer; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border-color); background: var(--bg-light); color: var(--text-main); display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-sun" id="profile-toggle-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <a href="support.html" class="settings-row" style="padding: 1.1rem 1.25rem; border-radius: 18px; background: var(--bg-card); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem; text-decoration: none; transition: var(--transition);">
+                <div class="settings-icon-wrapper" style="width: 44px; height: 44px; border-radius: 12px; background-color: rgba(242, 102, 102, 0.15); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
                     <i class="fa-solid fa-circle-question"></i>
                 </div>
-                <div class="settings-text">
-                    <h4>Help & Support</h4>
-                    <p>Get assistance and FAQs</p>
+                <div class="settings-text" style="flex: 1;">
+                    <h4 style="font-size: 0.98rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px;">Help & Support</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">Get assistance and FAQs</p>
                 </div>
-                <i class="fa-solid fa-chevron-right" style="color: gray;"></i>
+                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 0.9rem;"></i>
             </a>
 
-            <a href="privacy-policy.html" class="settings-row">
-                <div class="settings-icon-wrapper" style="background-color: rgba(255, 0, 0, 0.15); color: red;">
+            <a href="privacy-policy.html" class="settings-row" style="padding: 1.1rem 1.25rem; border-radius: 18px; background: var(--bg-card); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem; text-decoration: none; transition: var(--transition);">
+                <div class="settings-icon-wrapper" style="width: 44px; height: 44px; border-radius: 12px; background-color: rgba(16, 185, 129, 0.15); color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
-                <div class="settings-text">
-                    <h4>Privacy Policy</h4>
-                    <p>View our privacy policy</p>
+                <div class="settings-text" style="flex: 1;">
+                    <h4 style="font-size: 0.98rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px;">Privacy Policy</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">View our privacy policy</p>
                 </div>
-                <i class="fa-solid fa-chevron-right" style="color: gray;"></i>
+                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 0.9rem;"></i>
             </a>
-
-
         </div>
 
-        <a href="login.html" class="logout-btn" id="logout-btn">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
-        </a>
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="login.html" class="logout-btn" id="logout-btn" style="max-width: 220px; margin: 0 auto; padding: 0.75rem 2rem; border-radius: 999px; background: var(--primary); color: #fff; text-decoration: none; font-weight: 700; font-size: 0.95rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(242,102,102,0.3); transition: var(--transition);">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </div>
 
     </div>
 
@@ -200,7 +219,43 @@
             `;
             icon.className = s.iconClass;
 
-            // ── 6. Logout ─────────────────────────────────────────────────────
+            // ── 6. Appearance Theme Toggle ────────────────────────────────────
+            const profileThemeRow = document.getElementById('profile-theme-row');
+            const profileThemeBtn = document.getElementById('profile-theme-btn');
+            const profileThemeLabel = document.getElementById('profile-theme-label');
+            const profileThemeDesc = document.getElementById('profile-theme-desc');
+            const profileThemeIcon = document.getElementById('profile-theme-icon');
+            const profileToggleIcon = document.getElementById('profile-toggle-icon');
+
+            function updateProfileThemeUI(theme) {
+                if (theme === 'dark') {
+                    if (profileThemeLabel) profileThemeLabel.textContent = 'Dark Mode';
+                    if (profileThemeDesc) profileThemeDesc.textContent = 'Dark mode enabled';
+                    if (profileThemeIcon) profileThemeIcon.className = 'fa-solid fa-moon';
+                    if (profileToggleIcon) profileToggleIcon.className = 'fa-solid fa-sun';
+                } else {
+                    if (profileThemeLabel) profileThemeLabel.textContent = 'Light Mode';
+                    if (profileThemeDesc) profileThemeDesc.textContent = 'Light mode enabled';
+                    if (profileThemeIcon) profileThemeIcon.className = 'fa-solid fa-sun';
+                    if (profileToggleIcon) profileToggleIcon.className = 'fa-solid fa-moon';
+                }
+            }
+
+            const currentSavedTheme = localStorage.getItem('spinocare_theme') || 'dark';
+            updateProfileThemeUI(currentSavedTheme);
+
+            function toggleAppTheme() {
+                const activeTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                const nextTheme = activeTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', nextTheme);
+                localStorage.setItem('spinocare_theme', nextTheme);
+                updateProfileThemeUI(nextTheme);
+            }
+
+            if (profileThemeRow) profileThemeRow.addEventListener('click', toggleAppTheme);
+            if (profileThemeBtn) profileThemeBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleAppTheme(); });
+
+            // ── 7. Logout ─────────────────────────────────────────────────────
             document.getElementById('logout-btn').addEventListener('click', (e) => {
                 e.preventDefault();
                 localStorage.removeItem('spinocare_auth_token');

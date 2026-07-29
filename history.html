@@ -5,109 +5,138 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>History | SpinoCare</title>
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .report-card {
-            background: rgb(250, 242, 242);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            margin-bottom: 18px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .report-card-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 14px;
-        }
-
-        .report-card-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #222;
-            margin: 0 0 4px 0;
-        }
-
-        .report-card-meta {
-            font-size: 0.8rem;
-            color: #888;
-            margin: 0;
-        }
-
-        .conf-badge {
+        .conf-badge-modic {
             font-size: 0.8rem;
             font-weight: 700;
-            padding: 4px 10px;
-            background: rgba(130, 80, 200, 0.1);
-            color: rgba(100, 50, 180, 0.9);
-            border-radius: 10px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .download-report-btn {
-            width: 100%;
-            padding: 12px;
-            background: white;
+            padding: 4px 12px;
+            background: rgba(242, 102, 102, 0.15);
             color: #F26666;
-            border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: background 0.2s;
+            white-space: nowrap;
         }
 
-        .download-report-btn:hover {
-            background: #FFF5F5;
-        }
-
-        .download-report-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
+        .conf-badge-normal {
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #10B981;
+            border-radius: 12px;
+            white-space: nowrap;
         }
 
         .history-empty-state {
             text-align: center;
-            padding: 60px 20px;
-            color: #aaa;
+            padding: 80px 20px;
+            color: var(--text-muted);
         }
 
         .history-empty-state i {
-            font-size: 3rem;
-            color: rgba(242, 102, 102, 0.4);
-            margin-bottom: 16px;
+            font-size: 3.5rem;
+            color: var(--primary);
+            opacity: 0.5;
+            margin-bottom: 1rem;
             display: block;
-        }
-
-        .history-empty-state h3 {
-            font-size: 1.2rem;
-            color: #555;
-            margin-bottom: 8px;
         }
     </style>
 </head>
 
-<body class="profile-page" style="background-color: #F2F2F7;">
+<body>
 
     <div id="common-header"></div>
     <script src="components.js"></script>
 
-    <div class="profile-content animate-fade-in">
-        <div id="history-list"></div>
+    <div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+        
+        <!-- Header Title -->
+        <div style="margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem;">
+                    Diagnostic <span style="color: var(--primary);">History</span>
+                </h1>
+                <p style="color: var(--text-muted); font-size: 1rem;">Manage, compare, and download past spinal MRI AI diagnostic reports.</p>
+            </div>
+        </div>
+
+        <!-- Controls Bar: Search, Filters, Sort, View Toggle -->
+        <div class="history-controls-bar">
+            <div class="history-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="history-search-input" class="history-search-input" placeholder="Search by diagnosis, date, or ID...">
+            </div>
+
+            <div class="history-filters">
+                <button class="history-tag-pill active" data-filter="all">All</button>
+                <button class="history-tag-pill" data-filter="modic">Modic Change</button>
+                <button class="history-tag-pill" data-filter="nomodic">No Modic</button>
+            </div>
+
+            <div class="history-view-actions">
+                <select id="history-sort-select" style="padding: 0.5rem 1rem; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-light); color: var(--text-main); font-size: 0.85rem; font-weight: 600; cursor: pointer; outline: none;">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="confidence">Highest Confidence</option>
+                </select>
+
+                <button class="view-toggle-btn active" id="btn-view-grid" title="Grid View">
+                    <i class="fa-solid fa-grid-2"></i>
+                </button>
+                <button class="view-toggle-btn" id="btn-view-list" title="List View">
+                    <i class="fa-solid fa-list"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- History Cards List Container -->
+        <div id="history-list" class="grid-view animate-fade-in"></div>
     </div>
 
+    <!-- Side-by-Side Compare Modal -->
+    <div class="compare-modal-overlay" id="compare-modal">
+        <div class="compare-modal-card">
+            <div class="compare-header">
+                <div>
+                    <h3 id="compare-modal-title">Side-by-Side Scan Comparison</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);" id="compare-modal-sub">—</p>
+                </div>
+                <button class="compare-close-btn" id="compare-close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- T1 and T2 Side by Side Grid -->
+            <div class="compare-mri-grid">
+                <div class="compare-mri-box">
+                    <span class="compare-mri-label">T1-Weighted Scan</span>
+                    <img id="compare-t1-img" src="" alt="T1 MRI Scan">
+                </div>
+                <div class="compare-mri-box">
+                    <span class="compare-mri-label">T2-Weighted Scan</span>
+                    <img id="compare-t2-img" src="" alt="T2 MRI Scan">
+                </div>
+            </div>
+
+            <!-- Score breakdown sheet -->
+            <div style="background: var(--bg-light); border-radius: 16px; padding: 1.25rem; border: 1px solid var(--border-color); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">DIAGNOSIS</span>
+                    <strong id="compare-diag" style="font-size: 1.1rem; color: var(--primary);">—</strong>
+                </div>
+                <div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">CONFIDENCE SCORE</span>
+                    <strong id="compare-conf" style="font-size: 1.1rem; color: var(--text-main);">—</strong>
+                </div>
+                <div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">PROCESSING TIME</span>
+                    <strong id="compare-time" style="font-size: 1.1rem; color: var(--text-main);">—</strong>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <script>
@@ -116,51 +145,183 @@
             window.location.href = 'login.html';
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const list = document.getElementById('history-list');
-            const entries = JSON.parse(localStorage.getItem('spinocare_history') || '[]');
+        let allEntries = [];
+        let activeFilter = 'all';
+        let currentView = 'grid';
 
-            if (entries.length === 0) {
+        document.addEventListener('DOMContentLoaded', () => {
+            allEntries = JSON.parse(localStorage.getItem('spinocare_history') || '[]');
+            
+            setupEventListeners();
+            renderHistory();
+        });
+
+        function setupEventListeners() {
+            // Search Input
+            const searchInput = document.getElementById('history-search-input');
+            searchInput.addEventListener('input', renderHistory);
+
+            // Filter Tags
+            const filterPills = document.querySelectorAll('.history-tag-pill');
+            filterPills.forEach(pill => {
+                pill.addEventListener('click', (e) => {
+                    filterPills.forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    activeFilter = pill.dataset.filter;
+                    renderHistory();
+                });
+            });
+
+            // Sort Select
+            const sortSelect = document.getElementById('history-sort-select');
+            sortSelect.addEventListener('change', renderHistory);
+
+            // View Toggle
+            const btnGrid = document.getElementById('btn-view-grid');
+            const btnList = document.getElementById('btn-view-list');
+            const historyContainer = document.getElementById('history-list');
+
+            btnGrid.addEventListener('click', () => {
+                btnGrid.classList.add('active');
+                btnList.classList.remove('active');
+                historyContainer.classList.remove('list-view');
+                historyContainer.classList.add('grid-view');
+            });
+
+            btnList.addEventListener('click', () => {
+                btnList.classList.add('active');
+                btnGrid.classList.remove('active');
+                historyContainer.classList.remove('grid-view');
+                historyContainer.classList.add('list-view');
+            });
+
+            // Compare Modal Close
+            document.getElementById('compare-close-btn').addEventListener('click', closeCompareModal);
+            document.getElementById('compare-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'compare-modal') closeCompareModal();
+            });
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            const searchTerm = document.getElementById('history-search-input').value.toLowerCase();
+            const sortVal = document.getElementById('history-sort-select').value;
+
+            list.innerHTML = '';
+
+            // Filter entries
+            let filtered = allEntries.filter(entry => {
+                const label = (entry.label || '').toLowerCase();
+                const date = (entry.dateStr || '').toLowerCase();
+                const id = (entry.entryId || '').toLowerCase();
+                
+                const matchesSearch = label.includes(searchTerm) || date.includes(searchTerm) || id.includes(searchTerm);
+                
+                let matchesTag = true;
+                if (activeFilter === 'modic') matchesTag = entry.isModic;
+                if (activeFilter === 'nomodic') matchesTag = !entry.isModic;
+
+                return matchesSearch && matchesTag;
+            });
+
+            // Sort entries
+            filtered.sort((a, b) => {
+                if (sortVal === 'newest') return (b.timestamp || 0) - (a.timestamp || 0);
+                if (sortVal === 'oldest') return (a.timestamp || 0) - (b.timestamp || 0);
+                if (sortVal === 'confidence') return (b.confidence || 0) - (a.confidence || 0);
+                return 0;
+            });
+
+            if (filtered.length === 0) {
                 list.innerHTML = `
                 <div class="history-empty-state">
                     <i class="fa-solid fa-box-archive"></i>
-                    <h3>No Analyses Yet</h3>
-                    <p>Start by uploading T1 and T2 images in the Analyze tab.</p>
-                    <a href="index.html#analyzer" style="display:inline-block;margin-top:16px;padding:10px 24px;background:#F26666;color:white;border-radius:20px;text-decoration:none;font-weight:600;font-size:0.95rem;">
-                        Start Analysis
+                    <h3>No Analysis Records Found</h3>
+                    <p>No MRI scans match your current filter or search criteria.</p>
+                    <a href="index.html#analyzer" style="display:inline-block;margin-top:16px;padding:10px 24px;background:var(--primary);color:white;border-radius:20px;text-decoration:none;font-weight:600;font-size:0.95rem;">
+                        Start New Analysis
                     </a>
                 </div>`;
                 return;
             }
 
-            entries.forEach((entry, idx) => {
+            filtered.forEach((entry, idx) => {
                 const card = document.createElement('div');
-                card.className = 'report-card';
+                card.className = 'report-card-modern';
+                
+                const isModic = entry.isModic;
+                const badgeClass = isModic ? 'conf-badge-modic' : 'conf-badge-normal';
+                
+                // Fallback thumbnail placeholders if t1/t2 empty
+                const t1Thumb = entry.t1 || 'hero-mri.webp';
+                const t2Thumb = entry.t2 || 'hero-mri.webp';
+
                 card.innerHTML = `
-                <div class="report-card-header">
-                    <div>
-                        <p class="report-card-title">${entry.label}</p>
-                        <p class="report-card-meta">${entry.dateStr} &nbsp;&bull;&nbsp; Offline</p>
+                <div class="report-card-top">
+                    <div class="report-thumb-pair">
+                        <img src="${t1Thumb}" alt="T1">
+                        <img src="${t2Thumb}" alt="T2">
                     </div>
-                    <span class="conf-badge">${entry.confidence}%</span>
+                    <div class="report-card-info">
+                        <h4>${entry.label}</h4>
+                        <p><i class="fa-regular fa-clock"></i> ${entry.dateStr} &nbsp;&bull;&nbsp; Local AI</p>
+                    </div>
+                    <span class="${badgeClass}">${entry.confidence}% Match</span>
                 </div>
-                <button class="download-report-btn" id="dl-btn-${idx}">
-                    <i class="fa-solid fa-square-arrow-down"></i> Download Report
-                </button>`;
+
+                <div class="action-buttons-group">
+                    <button class="btn-secondary-action" onclick="openCompareModal('${entry.entryId}')">
+                        <i class="fa-solid fa-layer-group"></i> Compare Scans
+                    </button>
+                    <button class="btn-secondary-action" id="dl-btn-${idx}">
+                        <i class="fa-solid fa-file-arrow-down"></i> Report
+                    </button>
+                    <button class="btn-secondary-action" style="color: var(--primary-light); flex: 0 0 auto; width: 40px;" onclick="deleteHistoryEntry('${entry.entryId}')" title="Delete Entry">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>`;
+
                 list.appendChild(card);
 
+                // Attach PDF event
                 document.getElementById(`dl-btn-${idx}`).addEventListener('click', async function () {
-                    this.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Generating...';
+                    this.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
                     this.disabled = true;
                     await generatePDFReport(entry, entry.t1, entry.t2);
-                    this.innerHTML = '<i class="fa-solid fa-check"></i> Downloaded';
+                    this.innerHTML = '<i class="fa-solid fa-check"></i>';
                     setTimeout(() => {
-                        this.innerHTML = '<i class="fa-solid fa-square-arrow-down"></i> Download Report';
+                        this.innerHTML = '<i class="fa-solid fa-file-arrow-down"></i> Report';
                         this.disabled = false;
-                    }, 3000);
+                    }, 2500);
                 });
             });
-        });
+        }
+
+        function openCompareModal(entryId) {
+            const entry = allEntries.find(e => e.entryId === entryId);
+            if (!entry) return;
+
+            document.getElementById('compare-modal-title').textContent = entry.label;
+            document.getElementById('compare-modal-sub').textContent = `Report ID: ${entry.entryId} • Date: ${entry.dateStr}`;
+            document.getElementById('compare-t1-img').src = entry.t1 || 'hero-mri.webp';
+            document.getElementById('compare-t2-img').src = entry.t2 || 'hero-mri.webp';
+            document.getElementById('compare-diag').textContent = entry.label;
+            document.getElementById('compare-conf').textContent = `${entry.confidence}%`;
+            document.getElementById('compare-time').textContent = `${((entry.time || 450) / 1000).toFixed(2)}s`;
+
+            document.getElementById('compare-modal').classList.add('active');
+        }
+
+        function closeCompareModal() {
+            document.getElementById('compare-modal').classList.remove('active');
+        }
+
+        function deleteHistoryEntry(entryId) {
+            if (!confirm('Are you sure you want to delete this scan entry from your history?')) return;
+            allEntries = allEntries.filter(e => e.entryId !== entryId);
+            localStorage.setItem('spinocare_history', JSON.stringify(allEntries));
+            renderHistory();
+        }
 
         // ── PDF Generator matching iOS HistoryView createPDF ─────────────────────
         async function generatePDFReport(result, t1Src, t2Src) {
@@ -173,7 +334,7 @@
             const c = canvas.getContext('2d');
             c.fillStyle = 'white'; c.fillRect(0, 0, PW, PH);
 
-            // ── Coral header ─────────────────────────────────────────────────────
+            // Header
             c.fillStyle = CORAL; c.fillRect(0, 0, PW, 117);
 
             await new Promise(function (resolve) {
@@ -206,13 +367,11 @@
 
             let y = 141;
 
-            // ── ANALYSIS RESULTS sub-bar ─────────────────────────────────────────
             c.fillStyle = LIGHT_PINK; c.fillRect(M, y, CW, 32);
             c.fillStyle = CORAL; c.fillRect(M, y, 5, 32);
             c.fillStyle = TEXT_DARK; c.font = 'bold 13px Inter, sans-serif';
             c.fillText('ANALYSIS RESULTS', M + 14, y + 21); y += 44;
 
-            // ── Data Table ───────────────────────────────────────────────────────
             const col1W = 200, rowH = 34;
             const rows = [
                 ['Diagnosis Result', result.label],
@@ -220,7 +379,7 @@
                 ['No Modic Score', result.noModic + '%'],
                 ['Modic Change Score', result.confidence + '%'],
                 ['Analysis Mode', 'Offline (Local AI)'],
-                ['Processing Time', (result.time / 1000).toFixed(2) + ' sec'],
+                ['Processing Time', ((result.time || 450) / 1000).toFixed(2) + ' sec'],
                 ['AI Model Version', 'v2.3'],
                 ['Report ID', result.entryId],
             ];
@@ -246,7 +405,6 @@
 
             y += rows.length * rowH + 24;
 
-            // ── MRI SCAN IMAGES section ──────────────────────────────────────────
             c.fillStyle = LIGHT_PINK; c.fillRect(M, y, CW, 28);
             c.fillStyle = CORAL; c.fillRect(M, y, 5, 28);
             c.fillStyle = TEXT_DARK; c.font = 'bold 13px Inter, sans-serif';
@@ -275,20 +433,16 @@
                     c.fillStyle = TEXT_MUTED; c.font = '11px Inter, sans-serif';
                     c.textAlign = 'center'; c.fillText('Not available', x + imgColW / 2, imgY + imgH / 2); c.textAlign = 'left';
                 }
-                c.fillStyle = TEXT_MUTED; c.font = 'italic 10px Inter, sans-serif';
-                c.textAlign = 'center'; c.fillText(label, x + imgColW / 2, imgY + imgH + 14); c.textAlign = 'left';
             }
 
             await drawImg(t1Src, 'T1-Weighted MRI', M, y);
             await drawImg(t2Src, 'T2-Weighted MRI', M + imgColW + gutter, y);
 
-            // ── Footer ───────────────────────────────────────────────────────────
             const footerY = PH - 80;
             c.strokeStyle = DIVIDER; c.lineWidth = 0.5;
             c.beginPath(); c.moveTo(M, footerY); c.lineTo(M + CW, footerY); c.stroke();
             c.fillStyle = TEXT_MUTED; c.font = '9px Inter, sans-serif'; c.textAlign = 'center';
-            c.fillText('This report is generated by SpinoCare AI and is for informational purposes only.', PW / 2, footerY + 16);
-            c.fillText('It does not constitute a medical diagnosis. Please consult a qualified healthcare professional.', PW / 2, footerY + 30);
+            c.fillText('This report is generated by SpinoCare AI for informational purposes only.', PW / 2, footerY + 16);
             c.textAlign = 'right';
             c.fillText('Page 1  |  ID: ' + result.entryId, M + CW, footerY + 50);
 

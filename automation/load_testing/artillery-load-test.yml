@@ -1,0 +1,21 @@
+config:
+  target: "http://localhost:8000"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+      rampTo: 100
+      name: "Baseline Load (100 VUs)"
+    - duration: 30
+      arrivalRate: 100
+      rampTo: 500
+      name: "Spike Test (500 VUs)"
+  thresholds:
+    http.response_time.p95: 500
+    http.response_time.median: 250
+
+scenarios:
+  - flow:
+      - get:
+          url: "/index.html"
+      - get:
+          url: "/login.html"

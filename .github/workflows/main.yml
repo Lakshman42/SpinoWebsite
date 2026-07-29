@@ -1,8 +1,0 @@
-SpinoWebsite/
-├── .github/
-│   └── workflows/
-│       ├── selenium-tests.yml     # Selenium Web Test Automation Workflow
-│       └── appium-tests.yml       # Appium Mobile Test Automation Workflow
-├── website/
-├── test_selenium.py               # Selenium Python Test Script
-└── test_appium.py                 # Appium Python Test Script

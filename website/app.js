@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // ── SpinoCare AI Model & Dataset Configuration Links ──
+    window.MODEL_CONFIG = {
+        MODEL_LINK: 'https://github.com/Lakshman42/SpinoWebsite/blob/main/website/app.js#L355-L450',
+        DATASET_LINK: 'https://drive.google.com/drive/folders/1YbIE_9bfZmVtBY2yarb-hf7mFjemssD2?usp=sharing',
+        MODEL_VERSION: 'v2.3.0 (Radiomic Endplate Variance Ratio Classifier)'
+    };
     const uploadT1 = document.getElementById('upload-t1');
     const uploadT2 = document.getElementById('upload-t2');
     const inputT1 = document.getElementById('input-t1');
@@ -588,8 +594,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const t1Data = await toDataUrl(previewT1.src);
         const t2Data = await toDataUrl(previewT2.src);
 
-        const entries = JSON.parse(localStorage.getItem('spinocare_history') || '[]');
-        entries.unshift({
+        const entryPayload = {
             entryId: lastResult.entryId,
             label: lastResult.label,
             confidence: lastResult.confidence,
@@ -600,8 +605,34 @@ document.addEventListener('DOMContentLoaded', () => {
             isModic: lastResult.isModic,
             t1: t1Data,
             t2: t2Data,
-        });
+        };
+
+        const entries = JSON.parse(localStorage.getItem('spinocare_history') || '[]');
+        const existingIdx = entries.findIndex(e => e.entryId === entryPayload.entryId);
+        if (existingIdx >= 0) {
+            entries[existingIdx] = entryPayload;
+        } else {
+            entries.unshift(entryPayload);
+        }
         localStorage.setItem('spinocare_history', JSON.stringify(entries));
+
+        // Sync with central Cloud API Server for Mobile App parity
+        const token = localStorage.getItem('spinocare_auth_token');
+        if (token) {
+            try {
+                const API_BASE = 'http://14.139.187.229:8081/sept_batch2025/spinocare/php-api/index.php?path=/';
+                await fetch(API_BASE + 'reports', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(entryPayload)
+                });
+            } catch (err) {
+                console.warn('Could not sync scan result to cloud API server:', err);
+            }
+        }
 
         // Matches iOS isSaved → gray + checkmark
         this.innerHTML = '<i class="fa-solid fa-check"></i> Saved';

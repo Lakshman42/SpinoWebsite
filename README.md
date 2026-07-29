@@ -4,6 +4,14 @@ SpinoCare is an AI-powered web platform designed for rapid, accurate analysis of
 
 ---
 
+## 🔗 AI Model & Dataset Links
+
+- **AI Model Engine Source**: [`https://github.com/Lakshman42/SpinoWebsite/blob/main/website/app.js#L355-L450`](https://github.com/Lakshman42/SpinoWebsite/blob/main/website/app.js#L355-L450)
+- **Google Drive Dataset Link**: [`https://drive.google.com/drive/folders/1YbIE_9bfZmVtBY2yarb-hf7mFjemssD2?usp=sharing`](https://drive.google.com/drive/folders/1YbIE_9bfZmVtBY2yarb-hf7mFjemssD2?usp=sharing)
+- **Model Version**: `v2.3.0` (Radiomic Endplate Variance Ratio Classifier)
+
+---
+
 ## 📁 Repository Structure
 
 ```text

@@ -13,7 +13,10 @@ class SpinoCareSeleniumWebSuite(unittest.TestCase):
 
     def setUp(self):
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless=new") # Run headless for fast execution
+        options.add_argument("--headless=new")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-gpu")
         options.add_argument("--window-size=1920,1080")
         self.driver = webdriver.Chrome(options=options)
         self.wait = WebDriverWait(self.driver, 10)

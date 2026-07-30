@@ -26,6 +26,10 @@ def main():
     print(f"      Total Test Cases Loaded: {len(test_cases)}")
 
     print("[2/3] Executing Web E2E Validation Workflows...")
+    for tc in test_cases:
+        status_symbol = "[PASS]" if tc['status'] == 'PASSED' else "[FAIL]"
+        print(f"  {status_symbol} {tc['id']} | {tc['name']} ({tc['priority']}) - {tc['time_sec']:.2f}s")
+
     passed = sum(1 for t in test_cases if t['status'] == 'PASSED')
     failed = sum(1 for t in test_cases if t['status'] == 'FAILED')
     skipped = sum(1 for t in test_cases if t['status'] == 'SKIPPED')

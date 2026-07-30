@@ -25,6 +25,10 @@ def main():
     print(f"      Total API & Performance Test Cases Loaded: {len(test_cases)}")
 
     print("[2/3] Executing 100 VU / 1-min Baseline Load & Latency SLA Checks...")
+    for tc in test_cases:
+        status_symbol = "[PASS]" if tc['status'] == 'PASSED' else "[FAIL]"
+        print(f"  {status_symbol} {tc['id']} | {tc['name']} ({tc['priority']}) - {tc['latency_ms']:.1f}ms")
+
     passed = sum(1 for t in test_cases if t['status'] == 'PASSED')
     failed = sum(1 for t in test_cases if t['status'] == 'FAILED')
     
